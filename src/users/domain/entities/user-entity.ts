@@ -1,7 +1,7 @@
 import { ValidationError } from 'class-validator';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { UserValidatorFactory } from '../validators/user.validator';
-import { ERole } from '../enums/role.enum';
+import { ERole } from '../../../shared/domain/enums/role.enum';
 
 export type UserProps = {
   name: string;
