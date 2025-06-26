@@ -6,3 +6,5 @@ export type UserProps = {
   height?: number;
   weight?: number;
 };
+
+export class UserEntity {}
