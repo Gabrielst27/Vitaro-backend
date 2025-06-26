@@ -5,5 +5,5 @@ export type FieldsErrors = {
 export interface IClassValidator<Rules> {
   errors: FieldsErrors;
 
-  validate(rules: Rules);
+  validate(props: Rules);
 }

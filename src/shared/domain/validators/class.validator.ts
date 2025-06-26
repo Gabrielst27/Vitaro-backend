@@ -3,8 +3,8 @@ import { FieldsErrors, IClassValidator } from './class.validator.interface';
 
 export abstract class ClassValidator<Rules> implements IClassValidator<Rules> {
   errors: FieldsErrors;
-  validate(rules: any): boolean {
-    const errors = validateSync(rules);
+  validate(props: any): boolean {
+    const errors = validateSync(props);
     if (errors.length > 0) {
       this.errors = {};
       for (const error of errors) {
