@@ -17,7 +17,7 @@ export class Entity<Props> {
     return this._props;
   }
 
-  updateProps(props: Props) {
+  protected updateProps(props: Props) {
     if (props !== this._props) this._props = props;
   }
 }
