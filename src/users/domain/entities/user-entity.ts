@@ -1,7 +1,7 @@
-import { ValidationError } from 'class-validator';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { UserValidatorFactory } from '../validators/user.validator';
 import { ERole } from '../../../shared/domain/enums/role.enum';
+import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 
 export type UserProps = {
   name: string;
@@ -29,7 +29,7 @@ export class UserEntity extends Entity<UserProps> {
     const validator = UserValidatorFactory.create();
     const isValid = validator.validate(props);
     if (!isValid) {
-      throw new ValidationError();
+      throw new EntityValidationError(validator.errors);
     }
   }
 }
