@@ -2,6 +2,7 @@ import { UserEntity } from '../../domain/entities/user-entity';
 import { ERole } from '../../../shared/domain/enums/role.enum';
 
 export type UserOutput = {
+  id: string;
   name: string;
   email: string;
   password?: string;
@@ -18,6 +19,7 @@ export type UserOutput = {
 export class UserOutputMapper {
   static toOutput(entity: UserEntity): UserOutput {
     return {
+      id: entity.id,
       ...entity.props,
     };
   }

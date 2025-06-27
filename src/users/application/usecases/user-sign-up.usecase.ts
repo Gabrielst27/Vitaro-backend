@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
-import { UserOutput } from '../dtos/user.output.dto';
+import { UserOutput, UserOutputMapper } from '../dtos/user.output.dto';
 import { IUserRepository } from '../../domain/repositories/user-repository.interface';
 import { IAuthService } from '../../../auth/infra/firebase/sign-up.service.interface';
 import { UserEntity } from '../../domain/entities/user-entity';
@@ -20,6 +20,7 @@ export namespace UserSignUpUsecase {
       private userRepository: IUserRepository.Repository,
       private authService: IAuthService,
     ) {}
+
     async execute(input: Input): Promise<UserOutput> {
       const { name, email, password } = input;
       if (!name || !email || !password) {
@@ -41,7 +42,7 @@ export namespace UserSignUpUsecase {
       });
       delete entity.props.password;
       await this.userRepository.insert(entity);
-      throw new Error('Method not implemented');
+      return UserOutputMapper.toOutput(entity);
     }
   }
 }
