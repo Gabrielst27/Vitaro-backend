@@ -6,7 +6,7 @@ import { EntityValidationError } from '../../../shared/domain/errors/validation.
 export type UserProps = {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   age?: number;
   height?: number;
   weight?: number;

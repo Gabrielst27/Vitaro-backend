@@ -27,9 +27,9 @@ export class UserRules {
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Length(6, 64)
-  password: string;
+  password?: string;
 
   @IsInt()
   @IsOptional()

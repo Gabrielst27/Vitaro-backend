@@ -4,10 +4,13 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/infra/users.module';
 import { SharedModule } from './shared/infra/shared.module';
 import { AuthModule } from './auth/infra/auth.module';
+import { FirebaseService } from './shared/infra/database/firebase/firebase.service';
 
 @Module({
   imports: [UsersModule, SharedModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly firebaseService: FirebaseService) {}
+}

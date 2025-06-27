@@ -4,7 +4,7 @@ import { ERole } from '../../../shared/domain/enums/role.enum';
 export type UserOutput = {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   age?: number;
   height?: number;
   weight?: number;

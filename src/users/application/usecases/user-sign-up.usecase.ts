@@ -39,6 +39,8 @@ export namespace UserSignUpUsecase {
         email,
         password,
       });
+      delete entity.props.password;
+      await this.userRepository.insert(entity);
       throw new Error('Method not implemented');
     }
   }

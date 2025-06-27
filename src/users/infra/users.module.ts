@@ -4,19 +4,30 @@ import { AuthModule } from '../../auth/infra/auth.module';
 import { UserSignUpUsecase } from '../application/usecases/user-sign-up.usecase';
 import { IUserRepository } from '../domain/repositories/user-repository.interface';
 import { IAuthService } from '../../auth/infra/firebase/sign-up.service.interface';
+import { FirebaseModule } from '../../shared/infra/database/firebase/firebase.module';
+import { FirebaseService } from '../../shared/infra/database/firebase/firebase.service';
+import { UserFirebaseRepository } from './db/repositories/user-firebase.repository';
+import { SignUpService } from '../../auth/infra/firebase/sign-up.service';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, FirebaseModule],
   providers: [
+    {
+      provide: 'UserRepository',
+      useFactory: (firebaseService: FirebaseService) => {
+        return new UserFirebaseRepository(firebaseService);
+      },
+      inject: [FirebaseService],
+    },
     {
       provide: UserSignUpUsecase.UseCase,
       useFactory: (
         userRepository: IUserRepository.Repository,
         authService: IAuthService,
       ) => {
-        new UserSignUpUsecase.UseCase(userRepository, authService);
+        return new UserSignUpUsecase.UseCase(userRepository, authService);
       },
-      inject: [],
+      inject: ['UserRepository', SignUpService],
     },
   ],
   controllers: [UsersController],

@@ -2,7 +2,7 @@ import { getAuth, UserRecord } from 'firebase-admin/auth';
 import { IAuthService } from './sign-up.service.interface';
 import { SignUpDto } from './sign-up.dtos';
 
-export class AuthService implements IAuthService {
+export class SignUpService implements IAuthService {
   async createUser(user: SignUpDto): Promise<UserRecord> {
     try {
       return await getAuth().createUser({
