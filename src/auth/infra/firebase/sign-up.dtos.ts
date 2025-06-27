@@ -7,6 +7,11 @@ import {
 } from 'class-validator';
 
 export class SignUpDto {
+  @IsString()
+  @Length(36, 36)
+  @IsNotEmpty()
+  id: string;
+
   @Matches(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, {
     message:
       'username must contain only alpha characters (except for whitespace)',

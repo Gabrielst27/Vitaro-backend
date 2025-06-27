@@ -1,4 +1,12 @@
 import { Module } from '@nestjs/common';
+import { AuthService } from './firebase/sign-up.service';
 
-@Module({})
+@Module({
+  providers: [
+    {
+      provide: 'IAuthService',
+      useClass: AuthService,
+    },
+  ],
+})
 export class AuthModule {}
