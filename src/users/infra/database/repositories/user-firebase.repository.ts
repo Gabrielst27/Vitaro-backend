@@ -4,6 +4,7 @@ import { FirebaseService } from '../../../../shared/infra/database/firebase/fire
 import { UserEntity } from '../../../domain/entities/user-entity';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
 import { EFirebaseOperators } from '../../../../shared/domain/enums/firebase-operators.enum';
+import { UserDocumentMapper } from '../mappers/user-document.mapper';
 
 export class UserFirebaseRepository implements IUserRepository.Repository {
   sortableFields: string[];
@@ -18,7 +19,8 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
 
   async insert(entity: UserEntity): Promise<void> {
     const firestore = await this.firebaseService.getFirestoreDb();
-    await firestore.collection('users').add({ ...entity });
+    const document = UserDocumentMapper.toDocument(entity);
+    await firestore.collection('users').doc(entity.id).set(document);
   }
 
   findById(id: string): Promise<UserEntity> {

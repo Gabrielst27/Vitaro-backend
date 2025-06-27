@@ -6,7 +6,7 @@ import { IUserRepository } from '../domain/repositories/user-repository.interfac
 import { IAuthService } from '../../auth/infra/firebase/sign-up.service.interface';
 import { FirebaseModule } from '../../shared/infra/database/firebase/firebase.module';
 import { FirebaseService } from '../../shared/infra/database/firebase/firebase.service';
-import { UserFirebaseRepository } from './db/repositories/user-firebase.repository';
+import { UserFirebaseRepository } from './database/repositories/user-firebase.repository';
 import { SignUpService } from '../../auth/infra/firebase/sign-up.service';
 
 @Module({
