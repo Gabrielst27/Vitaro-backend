@@ -40,7 +40,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
     const firestore = await this.firebaseService.getFirestoreDb();
     const snapshot = await firestore
       .collection('users')
-      .where('_props.email', EFirebaseOperators.EQUALS, email)
+      .where('email', EFirebaseOperators.EQUALS, email)
       .limit(1)
       .get();
     if (snapshot.docs.length > 0) {

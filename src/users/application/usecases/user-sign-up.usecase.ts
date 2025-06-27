@@ -41,6 +41,7 @@ export namespace UserSignUpUsecase {
         password,
       });
       delete entity.props.password;
+      entity.props.isActive = true;
       await this.userRepository.insert(entity);
       return UserOutputMapper.toOutput(entity);
     }
