@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/infra/users.module';
 import { SharedModule } from './shared/infra/shared.module';
+import { AuthModule } from './auth/infra/auth.module';
 
 @Module({
-  imports: [UsersModule, SharedModule],
+  imports: [UsersModule, SharedModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

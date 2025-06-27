@@ -9,6 +9,8 @@ export namespace IUserRepository {
 
   export interface Repository
     extends ISearchableRepository<UserEntity, SearchInput, SearchOutput> {
+    findByEmail(email: string): Promise<UserEntity>;
+    emailExists(email: string): Promise<void>;
     disable(id: string): Promise<void>;
   }
 }
