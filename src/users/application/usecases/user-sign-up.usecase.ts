@@ -1,10 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
-import { UserOutput, UserOutputMapper } from '../dtos/user.output.dto';
 import { IUserRepository } from '../../domain/repositories/user-repository.interface';
 import { IAuthService } from '../../../auth/infra/firebase/sign-up.service.interface';
 import { UserEntity } from '../../domain/entities/user-entity';
 import { ERole } from '../../../shared/domain/enums/role.enum';
+import {
+  AuthenticatedUserOutput,
+  AuthenticatedUserOutputMapper,
+} from '../dtos/authenticated_user.output.dto';
 
 export namespace UserSignUpUsecase {
   export type Input = {
@@ -13,7 +16,7 @@ export namespace UserSignUpUsecase {
     password: string;
   };
 
-  export type Ouput = UserOutput;
+  export type Ouput = AuthenticatedUserOutput;
 
   export class UseCase implements IUsecase<Input, Ouput> {
     constructor(
@@ -21,7 +24,7 @@ export namespace UserSignUpUsecase {
       private authService: IAuthService,
     ) {}
 
-    async execute(input: Input): Promise<UserOutput> {
+    async execute(input: Input): Promise<AuthenticatedUserOutput> {
       const { name, email, password } = input;
       if (!name || !email || !password) {
         throw new BadRequestException('Input not provided');
@@ -34,7 +37,7 @@ export namespace UserSignUpUsecase {
         isActive: false,
         role: ERole.COMMON,
       });
-      await this.authService.createUser({
+      const authUser = await this.authService.createUser({
         id: entity.id,
         name,
         email,
@@ -43,7 +46,7 @@ export namespace UserSignUpUsecase {
       delete entity.props.password;
       entity.props.isActive = true;
       await this.userRepository.insert(entity);
-      return UserOutputMapper.toOutput(entity);
+      return AuthenticatedUserOutputMapper.toOutput(entity, authUser.token);
     }
   }
 }
