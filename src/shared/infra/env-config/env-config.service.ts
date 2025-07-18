@@ -20,4 +20,15 @@ export class EnvConfigService implements IEnvConfigService {
       this.configService.get<string>('FIREBASE_CREDENTIALS_PATH') ?? '';
     return path;
   }
+
+  getFirebaseApiKey(): string {
+    const key = this.configService.get<string>('FIREBASE_API_KEY') ?? '';
+    return key;
+  }
+
+  getGoogleApiIdentityToolkit(): string {
+    const url =
+      this.configService.get<string>('GOOGLE_API_IDENTITY_TOOLKIT') ?? '';
+    return url;
+  }
 }

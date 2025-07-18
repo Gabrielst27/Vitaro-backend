@@ -1,13 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { IUserRepository } from '../../domain/repositories/user-repository.interface';
-import { IAuthService } from '../../../auth/infra/firebase/sign-up.service.interface';
+import { IAuthService } from '../../../auth/application/auth.service.interface';
 import { UserEntity } from '../../domain/entities/user-entity';
 import { ERole } from '../../../shared/domain/enums/role.enum';
 import {
   AuthenticatedUserOutput,
   AuthenticatedUserOutputMapper,
-} from '../dtos/authenticated_user.output.dto';
+} from '../dtos/authenticated-user.output.dto';
 
 export namespace UserSignUpUsecase {
   export type Input = {
@@ -37,12 +37,7 @@ export namespace UserSignUpUsecase {
         isActive: false,
         role: ERole.COMMON,
       });
-      const authUser = await this.authService.createUser({
-        id: entity.id,
-        name,
-        email,
-        password,
-      });
+      const authUser = await this.authService.createUser(entity);
       delete entity.props.password;
       entity.props.isActive = true;
       await this.userRepository.insert(entity);
