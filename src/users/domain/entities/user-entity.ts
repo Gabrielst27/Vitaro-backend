@@ -21,6 +21,9 @@ export class UserEntity extends Entity<UserProps> {
   constructor(props: UserProps, id?: string) {
     UserEntity.validate(props);
     super(props, id);
+    this.props.age = this.props.age ?? 0;
+    this.props.height = this.props.height ?? 0;
+    this.props.weight = this.props.weight ?? 0;
     this.props.createdAt = this.props.createdAt ?? new Date();
     this.props.updatedAt = this.props.updatedAt ?? new Date();
   }
