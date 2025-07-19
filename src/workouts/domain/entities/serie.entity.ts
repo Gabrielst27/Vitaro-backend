@@ -1,3 +1,5 @@
+import { Entity } from '../../../shared/domain/entities/entity';
+
 export type SerieProps = {
   position: number;
   weight: number;
@@ -7,8 +9,9 @@ export type SerieProps = {
   accessory?: string;
 };
 
-export class SerieEntity {
-  constructor(props: SerieProps) {
+export class SerieEntity extends Entity<SerieProps> {
+  constructor(props: SerieProps, id?: string) {
+    super(props, id);
     props.restInSeconds = props.restInSeconds || 90;
   }
 }

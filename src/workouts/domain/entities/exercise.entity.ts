@@ -1,3 +1,4 @@
+import { Entity } from '../../../shared/domain/entities/entity';
 import { SerieEntity } from './serie.entity';
 
 export type ExerciseProps = {
@@ -6,6 +7,8 @@ export type ExerciseProps = {
   series: SerieEntity[];
 };
 
-export class ExerciseEntity {
-  constructor(props: ExerciseProps) {}
+export class ExerciseEntity extends Entity<ExerciseProps> {
+  constructor(props: ExerciseProps, id?: string) {
+    super(props, id);
+  }
 }
