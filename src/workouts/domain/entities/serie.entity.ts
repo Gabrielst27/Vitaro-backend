@@ -1,4 +1,6 @@
 import { Entity } from '../../../shared/domain/entities/entity';
+import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
+import { SerieValidatorFactory } from '../validators/serie.validator';
 
 export type SerieProps = {
   position: number;
@@ -11,7 +13,16 @@ export type SerieProps = {
 
 export class SerieEntity extends Entity<SerieProps> {
   constructor(props: SerieProps, id?: string) {
+    SerieEntity.validate(props);
     super(props, id);
     props.restInSeconds = props.restInSeconds || 90;
+  }
+
+  static validate(props: SerieProps) {
+    const validator = SerieValidatorFactory.create();
+    const isValid = validator.validate(props);
+    if (!isValid) {
+      throw new EntityValidationError(validator.errors);
+    }
   }
 }
