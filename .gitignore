@@ -19,6 +19,9 @@ lerna-debug.log*
 /coverage
 /.nyc_output
 
+# SDK
+firebase-adminsdk.json
+
 # IDEs and editors
 /.idea
 .project
@@ -27,6 +30,7 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
+.vscode
 
 # IDE - VSCode
 .vscode/*
@@ -37,6 +41,7 @@ lerna-debug.log*
 
 # dotenv environment variable files
 .env
+.env.development
 .env.development.local
 .env.test.local
 .env.production.local

@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 
-export class Entity<Props> {
-  private _id: string;
+export class Entity<Props = any> {
+  private readonly _id: string;
   private _props: Props;
 
   constructor(props: Props, id?: string) {

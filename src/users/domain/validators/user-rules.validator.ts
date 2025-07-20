@@ -1,10 +1,10 @@
 import {
   IsBoolean,
   IsDate,
-  IsDecimal,
   IsEmail,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Length,
@@ -27,19 +27,19 @@ export class UserRules {
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Length(6, 64)
-  password: string;
+  password?: string;
 
   @IsInt()
   @IsOptional()
   age?: number;
 
-  @IsDecimal()
+  @IsNumber()
   @IsOptional()
   height?: number;
 
-  @IsDecimal()
+  @IsNumber()
   @IsOptional()
   weight?: number;
 
