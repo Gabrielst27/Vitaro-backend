@@ -1,5 +1,5 @@
 export enum EWorkoutCategories {
-  hypertrophy,
-  cardio,
-  strength,
+  hypertrophy = 'hypertrophy',
+  cardio = 'cardio',
+  strength = 'strength',
 }

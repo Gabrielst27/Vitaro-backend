@@ -5,7 +5,7 @@ import { UsersModule } from './users/infra/users.module';
 import { SharedModule } from './shared/infra/shared.module';
 import { AuthModule } from './auth/infra/auth.module';
 import { FirebaseService } from './shared/infra/database/firebase/firebase.service';
-import { WorkoutsModule } from './workouts/workouts.module';
+import { WorkoutsModule } from './workouts/infra/workouts.module';
 
 @Module({
   imports: [UsersModule, SharedModule, AuthModule, WorkoutsModule],
