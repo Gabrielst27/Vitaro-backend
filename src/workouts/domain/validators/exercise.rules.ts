@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
+  IsArray,
   IsNotEmpty,
   IsNumberString,
   IsString,
@@ -20,6 +22,8 @@ export class ExerciseRules {
   @IsNotEmpty()
   name: string;
 
+  @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested()
   @Type(() => SerieRules)
   series: SerieRules[];
