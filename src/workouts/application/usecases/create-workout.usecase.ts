@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
-import { EWorkoutCategories } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { IWorkoutRepository } from '../../domain/repositories/workout.repository.interface';
 import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
@@ -11,7 +11,7 @@ import { ExerciseProps } from '../../domain/entities/exercise.entity';
 export namespace CreateWorkoutUseCase {
   export type Input = {
     title: string;
-    category: EWorkoutCategories;
+    goal: EWorkoutGoals;
     sport: EWorkoutSports;
     exercises: {
       refId: string;
@@ -31,8 +31,8 @@ export namespace CreateWorkoutUseCase {
     constructor(private workoutRepository: IWorkoutRepository.Repository) {}
 
     async execute(input: Input): Promise<WorkoutOutput> {
-      const { title, category, sport, exercises } = input;
-      if (!title || !category || !sport || !exercises) {
+      const { title, goal, sport, exercises } = input;
+      if (!title || !goal || !sport || !exercises) {
         throw new BadRequestException('Workout input not provided');
       }
       if (exercises.length < 1) {

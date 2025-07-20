@@ -9,7 +9,7 @@ import {
   Length,
   ValidateNested,
 } from 'class-validator';
-import { EWorkoutCategories } from '../enums/workout-categories.enum';
+import { EWorkoutGoals } from '../enums/workout-categories.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
 import { Type } from 'class-transformer';
 import { ExerciseRules } from './exercise.rules';
@@ -21,9 +21,9 @@ export class WorkoutRules {
   @IsNotEmpty()
   title: string;
 
-  @IsEnum(EWorkoutCategories)
+  @IsEnum(EWorkoutGoals)
   @IsNotEmpty()
-  category: EWorkoutCategories;
+  category: EWorkoutGoals;
 
   @IsEnum(EWorkoutSports)
   @IsNotEmpty()
@@ -37,7 +37,13 @@ export class WorkoutRules {
   @IsOptional()
   updatedAt?: Date;
 
-  constructor({ title, category, sport, createdAt, updatedAt }: WorkoutProps) {
+  constructor({
+    title,
+    goal: category,
+    sport,
+    createdAt,
+    updatedAt,
+  }: WorkoutProps) {
     Object.assign(this, {
       title,
       category,

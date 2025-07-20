@@ -1,5 +1,4 @@
 import {
-  ArrayMinSize,
   IsArray,
   IsEnum,
   IsNotEmpty,
@@ -8,10 +7,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateWorkoutUseCase } from '../../application/usecases/create-workout.usecase';
-import { EWorkoutCategories } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { Type } from 'class-transformer';
-import { ExerciseRules } from '../../domain/validators/exercise.rules';
 import { CreateExerciseDto } from './create-exercise.dto';
 
 export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
@@ -20,9 +18,9 @@ export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
   @IsNotEmpty()
   title: string;
 
-  @IsEnum(EWorkoutCategories)
+  @IsEnum(EWorkoutGoals)
   @IsNotEmpty()
-  category: EWorkoutCategories;
+  goal: EWorkoutGoals;
 
   @IsEnum(EWorkoutSports)
   @IsNotEmpty()

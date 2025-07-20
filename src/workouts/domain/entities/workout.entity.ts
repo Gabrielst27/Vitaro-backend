@@ -1,13 +1,13 @@
 import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
-import { EWorkoutCategories } from '../enums/workout-categories.enum';
+import { EWorkoutGoals } from '../enums/workout-categories.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
 import { WorkoutValidatorFactory } from '../validators/workout.validator';
 import { ExerciseEntity, ExerciseProps } from './exercise.entity';
 
 export type WorkoutProps = {
   title: string;
-  category: EWorkoutCategories;
+  goal: EWorkoutGoals;
   sport: EWorkoutSports;
   exercises: ExerciseProps[];
   createdAt?: Date;
@@ -16,7 +16,7 @@ export type WorkoutProps = {
 
 export class WorkoutEntity extends Entity<WorkoutProps> {
   private _title: string;
-  private _category: EWorkoutCategories;
+  private _goal: EWorkoutGoals;
   private _sport: EWorkoutSports;
   private _exercises: ExerciseEntity[];
   private _createdAt: Date;
@@ -36,7 +36,7 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
   }
 
   public get category() {
-    return this._category;
+    return this._goal;
   }
 
   public get sport() {

@@ -1,10 +1,10 @@
 import { WorkoutEntity } from '../../../../domain/entities/workout.entity';
-import { EWorkoutCategories } from '../../../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../../../domain/enums/workout-categories.enum';
 import { EWorkoutSports } from '../../../../domain/enums/workout-sports.enum';
 
 export type WorkoutDocument = {
   title: string;
-  category: EWorkoutCategories;
+  goal: EWorkoutGoals;
   sport: EWorkoutSports;
 };
 
