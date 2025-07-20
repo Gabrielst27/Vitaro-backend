@@ -3,7 +3,7 @@ import { IAuthService } from '../../application/auth.service.interface';
 import {
   AuthenticatedUserOutput,
   AuthenticatedUserOutputMapper,
-} from '../../../users/application/dtos/authenticated-user.output.dto';
+} from '../../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../../users/domain/entities/user-entity';
 import axios, { AxiosResponse } from 'axios';
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';

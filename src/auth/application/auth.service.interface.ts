@@ -1,4 +1,4 @@
-import { AuthenticatedUserOutput } from '../../users/application/dtos/authenticated-user.output.dto';
+import { AuthenticatedUserOutput } from '../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../users/domain/entities/user-entity';
 import { UserIdentity } from './outputs/user-identity.output';
 

@@ -7,7 +7,7 @@ import { ERole } from '../../../shared/domain/enums/role.enum';
 import {
   AuthenticatedUserOutput,
   AuthenticatedUserOutputMapper,
-} from '../dtos/authenticated-user.output.dto';
+} from '../outputs/authenticated-user.output';
 
 export namespace UserSignUpUsecase {
   export type Input = {

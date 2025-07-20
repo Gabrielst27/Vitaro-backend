@@ -3,7 +3,7 @@ import { IUsecase } from '../../../shared/application/usecases/usecase.interface
 import {
   AuthenticatedUserOutput,
   AuthenticatedUserOutputMapper,
-} from '../dtos/authenticated-user.output.dto';
+} from '../outputs/authenticated-user.output';
 import { IUserRepository } from '../../domain/repositories/user-repository.interface';
 import { IAuthService } from '../../../auth/application/auth.service.interface';
 import { UserIdentity } from '../../../auth/application/outputs/user-identity.output';

@@ -10,6 +10,7 @@ export namespace IWorkoutRepository {
   export type SearchOutput = SearchResult<WorkoutEntity>;
   export interface Repository
     extends ISearchableRepository<WorkoutEntity, SearchInput, SearchOutput> {
+    titleExists(title: string): Promise<void>;
     findExercises(workoutId: string): Promise<ExerciseEntity[]>;
     addExercise(exercise: ExerciseEntity): Promise<void>;
     removeExercise(exerciseId: string): Promise<void>;
