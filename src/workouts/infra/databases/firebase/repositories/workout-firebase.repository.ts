@@ -75,21 +75,6 @@ export class WorkoutFirebaseRepository
       .collection(this.collection)
       .doc(entity.id);
     await workoutDocRef.set(workoutDocument);
-    for (const exercise of entity.props.exercises) {
-      const exerciseDocument =
-        WorkoutDocumentMapper.exerciseToDocument(exercise);
-      const exerciseDocRef = await workoutDocRef
-        .collection(this.exercisesSubcollection)
-        .doc(exercise.id);
-      await exerciseDocRef.set(exerciseDocument);
-      for (const serie of exercise.props.series) {
-        const serieDocument = WorkoutDocumentMapper.serieToDocument(serie);
-        const serieDocRef = await exerciseDocRef
-          .collection(this.seriesSubcollection)
-          .doc(serie.id);
-        await serieDocRef.set(serieDocument);
-      }
-    }
   }
 
   findById(id: string): Promise<WorkoutEntity> {

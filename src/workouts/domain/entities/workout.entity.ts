@@ -3,23 +3,67 @@ import { EntityValidationError } from '../../../shared/domain/errors/validation.
 import { EWorkoutCategories } from '../enums/workout-categories.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
 import { WorkoutValidatorFactory } from '../validators/workout.validator';
-import { ExerciseEntity } from './exercise.entity';
+import { ExerciseEntity, ExerciseProps } from './exercise.entity';
 
 export type WorkoutProps = {
   title: string;
   category: EWorkoutCategories;
   sport: EWorkoutSports;
-  exercises: ExerciseEntity[];
+  exercises: ExerciseProps[];
   createdAt?: Date;
   updatedAt?: Date;
 };
 
 export class WorkoutEntity extends Entity<WorkoutProps> {
+  private _title: string;
+  private _category: EWorkoutCategories;
+  private _sport: EWorkoutSports;
+  private _exercises: ExerciseEntity[];
+  private _createdAt: Date;
+  private _updatedAt: Date;
+
   constructor(props: WorkoutProps, id?: string) {
     WorkoutEntity.validate(props);
     super(props, id);
-    this.props.createdAt = this.props.createdAt ?? new Date();
-    this.props.updatedAt = this.props.updatedAt ?? new Date();
+    const exercises = WorkoutEntity.initializeExercises(props.exercises);
+    this._exercises = exercises;
+    this._createdAt = this.props.createdAt ?? new Date();
+    this._updatedAt = this.props.updatedAt ?? new Date();
+  }
+
+  public get title() {
+    return this._title;
+  }
+
+  public get category() {
+    return this._category;
+  }
+
+  public get sport() {
+    return this._sport;
+  }
+
+  public get exercises() {
+    return this._exercises;
+  }
+
+  public get createdAt() {
+    return this._createdAt;
+  }
+
+  public get updatedAt() {
+    return this._updatedAt;
+  }
+
+  static initializeExercises(exercises: ExerciseProps[]): ExerciseEntity[] {
+    if (exercises.length < 1) {
+      return [];
+    }
+    const entities: ExerciseEntity[] = [];
+    for (const exercise of exercises) {
+      entities.push(new ExerciseEntity(exercise));
+    }
+    return entities;
   }
 
   static validate(props: WorkoutProps): void {

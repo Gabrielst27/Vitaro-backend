@@ -27,9 +27,9 @@ export class WorkoutOutputMapper {
       ...entity.props,
       exercises: entity.props.exercises.map((exercise) => {
         return {
-          ...exercise.props,
-          series: exercise.props.series.map((serie) => {
-            return serie.props;
+          ...exercise,
+          series: exercise.series.map((serie) => {
+            return serie;
           }),
         };
       }),

@@ -5,8 +5,8 @@ import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { IWorkoutRepository } from '../../domain/repositories/workout.repository.interface';
 import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
 import { WorkoutEntity } from '../../domain/entities/workout.entity';
-import { SerieEntity } from '../../domain/entities/serie.entity';
-import { ExerciseEntity } from '../../domain/entities/exercise.entity';
+import { SerieProps } from '../../domain/entities/serie.entity';
+import { ExerciseProps } from '../../domain/entities/exercise.entity';
 
 export namespace CreateWorkoutUseCase {
   export type Input = {
@@ -17,6 +17,7 @@ export namespace CreateWorkoutUseCase {
       refId: string;
       name: string;
       series: {
+        position: number;
         weight: number;
         reps: number;
         restInSeconds?: number;
@@ -46,22 +47,21 @@ export namespace CreateWorkoutUseCase {
         }
       }
       await this.workoutRepository.titleExists(title);
-      const exerciseEntities: ExerciseEntity[] = [];
-      for (let exercise of exercises) {
-        const serieEntities: SerieEntity[] = [];
-        let position: number = 0;
-        for (let serie of exercise.series) {
-          serieEntities.push(new SerieEntity({ ...serie, position: position }));
-          position++;
+      const exercisesProps: ExerciseProps[] = [];
+      for (const exercise of exercises) {
+        const exerciseProps: ExerciseProps = {
+          ...exercise,
+          series: [],
+        };
+        for (const serie of exercise.series) {
+          const serieProps: SerieProps = {
+            ...serie,
+          };
+          exerciseProps.series.push(serieProps);
         }
-        exerciseEntities.push(
-          new ExerciseEntity({ ...exercise, series: serieEntities }),
-        );
+        exercisesProps.push(exerciseProps);
       }
-      const entity = new WorkoutEntity({
-        ...input,
-        exercises: exerciseEntities,
-      });
+      const entity = new WorkoutEntity({ ...input, exercises: exercisesProps });
       await this.workoutRepository.insert(entity);
       return WorkoutOutputMapper.toOutput(entity);
     }

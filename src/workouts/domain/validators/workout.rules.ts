@@ -29,12 +29,6 @@ export class WorkoutRules {
   @IsNotEmpty()
   sport: EWorkoutSports;
 
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested()
-  @Type(() => ExerciseRules)
-  exercises: ExerciseRules[];
-
   @IsDate()
   @IsOptional()
   createdAt?: Date;
@@ -43,19 +37,11 @@ export class WorkoutRules {
   @IsOptional()
   updatedAt?: Date;
 
-  constructor({
-    title,
-    category,
-    sport,
-    exercises,
-    createdAt,
-    updatedAt,
-  }: WorkoutProps) {
+  constructor({ title, category, sport, createdAt, updatedAt }: WorkoutProps) {
     Object.assign(this, {
       title,
       category,
       sport,
-      exercises,
       createdAt,
       updatedAt,
     });

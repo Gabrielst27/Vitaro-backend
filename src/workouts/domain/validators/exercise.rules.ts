@@ -1,14 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsNotEmpty,
-  IsNumberString,
-  IsString,
-  Length,
-  ValidateNested,
-} from 'class-validator';
-import { SerieRules } from './serie.rules';
+import { IsNotEmpty, IsNumberString, IsString, Length } from 'class-validator';
 import { ExerciseProps } from '../entities/exercise.entity';
 
 export class ExerciseRules {
@@ -22,17 +12,10 @@ export class ExerciseRules {
   @IsNotEmpty()
   name: string;
 
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested()
-  @Type(() => SerieRules)
-  series: SerieRules[];
-
-  constructor({ refId, name, series }: ExerciseProps) {
+  constructor({ refId, name }: ExerciseProps) {
     Object.assign(this, {
       refId,
       name,
-      series,
     });
   }
 }
