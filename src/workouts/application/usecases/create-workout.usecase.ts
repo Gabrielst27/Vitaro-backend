@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
@@ -30,7 +30,10 @@ export namespace CreateWorkoutUseCase {
   export class UseCase implements IUsecase<Input, Output> {
     constructor(private workoutRepository: IWorkoutRepository.Repository) {}
 
-    async execute(input: Input): Promise<WorkoutOutput> {
+    async execute(input: Input, authorId?: string): Promise<WorkoutOutput> {
+      if (!authorId) {
+        throw new UnauthorizedException('User is not authenticated');
+      }
       const { title, goal, sport, exercises } = input;
       if (!title || !goal || !sport || !exercises) {
         throw new BadRequestException('Workout input not provided');
@@ -61,7 +64,11 @@ export namespace CreateWorkoutUseCase {
         }
         exercisesProps.push(exerciseProps);
       }
-      const entity = new WorkoutEntity({ ...input, exercises: exercisesProps });
+      const entity = new WorkoutEntity({
+        ...input,
+        authorId,
+        exercises: exercisesProps,
+      });
       await this.workoutRepository.insert(entity);
       return WorkoutOutputMapper.toOutput(entity);
     }

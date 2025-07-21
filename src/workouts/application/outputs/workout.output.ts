@@ -4,6 +4,7 @@ import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 
 export type WorkoutOutput = {
   id: string;
+  authorId: string;
   title: string;
   goal: EWorkoutGoals;
   sport: EWorkoutSports;

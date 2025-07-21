@@ -1,21 +1,21 @@
 import {
-  ArrayMinSize,
-  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   Length,
-  ValidateNested,
 } from 'class-validator';
 import { EWorkoutGoals } from '../enums/workout-categories.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
-import { Type } from 'class-transformer';
-import { ExerciseRules } from './exercise.rules';
 import { WorkoutProps } from '../entities/workout.entity';
 
 export class WorkoutRules {
+  @IsUUID()
+  @IsNotEmpty()
+  authorId: string;
+
   @IsString()
   @Length(4, 32)
   @IsNotEmpty()
@@ -38,6 +38,7 @@ export class WorkoutRules {
   updatedAt?: Date;
 
   constructor({
+    authorId,
     title,
     goal: category,
     sport,
@@ -45,6 +46,7 @@ export class WorkoutRules {
     updatedAt,
   }: WorkoutProps) {
     Object.assign(this, {
+      authorId,
       title,
       category,
       sport,
