@@ -5,9 +5,10 @@ import { WorkoutFirebaseRepository } from './databases/firebase/repositories/wor
 import { FirebaseService } from '../../shared/infra/database/firebase/firebase.service';
 import { CreateWorkoutUseCase } from '../application/usecases/create-workout.usecase';
 import { IWorkoutRepository } from '../domain/repositories/workout.repository.interface';
+import { AuthModule } from '../../auth/infra/auth.module';
 
 @Module({
-  imports: [FirebaseModule],
+  imports: [FirebaseModule, AuthModule],
   controllers: [WorkoutsController],
   providers: [
     {

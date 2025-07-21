@@ -4,4 +4,6 @@ export interface IEnvConfigService {
   getFirebaseCredentialPath(): string;
   getFirebaseApiKey(): string;
   getGoogleApiIdentityToolkit(): string;
+  getJwTSecret(): string;
+  getJwtExpiresInSecond(): number;
 }

@@ -31,4 +31,12 @@ export class EnvConfigService implements IEnvConfigService {
       this.configService.get<string>('GOOGLE_API_IDENTITY_TOOLKIT') ?? '';
     return url;
   }
+
+  getJwTSecret(): string {
+    return this.configService.get<string>('JWT_SECRET')!;
+  }
+
+  getJwtExpiresInSecond(): number {
+    return Number(this.configService.get<number>('JWT_EXPIRES_IN_SECONDS')!);
+  }
 }

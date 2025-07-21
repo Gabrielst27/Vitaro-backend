@@ -1,15 +1,16 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { UserSignUpUsecase } from '../application/usecases/user-sign-up.usecase';
 import { UserSignUpDto } from './dtos/user-sign-up.dto';
-import { UserSignInUsecase } from '../application/usecases/user-sign-in.usecase';
+import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
+import { UserSignInDto } from './dtos/user-sign-in.dto';
 
 @Controller('users')
 export class UsersController {
   @Inject(UserSignUpUsecase.UseCase)
   private signUpUseCase: UserSignUpUsecase.UseCase;
 
-  @Inject(UserSignInUsecase.UseCase)
-  private signInUseCase: UserSignInUsecase.UseCase;
+  @Inject(UserSignInWithIdTokenUsecase.UseCase)
+  private signInUseCase: UserSignInWithIdTokenUsecase.UseCase;
 
   @Post('sign-up')
   async signUp(@Body() userSignUpDto: UserSignUpDto) {
@@ -17,7 +18,7 @@ export class UsersController {
   }
 
   @Post('sign-in')
-  async signIn(@Body() userSignInDto: any) {
+  async signIn(@Body() userSignInDto: UserSignInDto) {
     return await this.signInUseCase.execute(userSignInDto);
   }
 }

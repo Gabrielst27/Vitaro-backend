@@ -1,8 +1,10 @@
 import { AuthenticatedUserOutput } from '../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../users/domain/entities/user-entity';
-import { UserIdentity } from './outputs/user-identity.output';
+
+export const AUTH_SERVICE = Symbol('AUTH_SERVICE');
 
 export interface IAuthService {
   createUser(user: UserEntity): Promise<AuthenticatedUserOutput>;
-  signInFirebase(email: string, password: string): Promise<UserIdentity>;
+  signInFirebase(token: string): Promise<string>;
+  verifyToken(token: string): Promise<any>;
 }

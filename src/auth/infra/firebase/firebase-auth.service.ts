@@ -5,9 +5,7 @@ import {
   AuthenticatedUserOutputMapper,
 } from '../../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../../users/domain/entities/user-entity';
-import axios, { AxiosResponse } from 'axios';
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { UserIdentity } from '../../application/outputs/user-identity.output';
 import { GoogleApiIdentityDto } from './dtos/google-api-identity.dto';
 import { IEnvConfigService } from '../../../shared/infra/env-config/env-config.service.interface';
 
@@ -36,29 +34,20 @@ export class FirebaseAuthService implements IAuthService {
     }
   }
 
-  async signInFirebase(email: string, password: string): Promise<UserIdentity> {
+  async signInFirebase(token: string): Promise<string> {
     try {
-      const response = await axios.post(
-        `${this.envConfigService.getGoogleApiIdentityToolkit()}/accounts:signInWithPassword?email=${email}&password=${password}&key=${this.envConfigService.getFirebaseApiKey()}`,
-        {},
-        { timeout: 16000 },
-      );
-      if (response.status >= 400) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-      const userResponse: GoogleApiIdentityDto = response.data;
-      if (!userResponse.registered) {
-        throw new ForbiddenException('User is not registered');
-      }
-      return {
-        uid: userResponse.localId,
-        token: userResponse.idToken,
-      };
+      const decodedToken = await this.verifyToken(token);
+      return decodedToken.user_id;
     } catch (error) {
       if (error.response.status >= 400 && error.response.status <= 500) {
         throw new UnauthorizedException('Invalid credentials');
       }
       throw new Error('ERR-0001');
     }
+  }
+
+  async verifyToken(token: string): Promise<any> {
+    const decodedToken = await getAuth().verifyIdToken(token);
+    return decodedToken;
   }
 }

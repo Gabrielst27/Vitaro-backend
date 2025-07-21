@@ -3,12 +3,14 @@ import { UsersController } from './users.controller';
 import { AuthModule } from '../../auth/infra/auth.module';
 import { UserSignUpUsecase } from '../application/usecases/user-sign-up.usecase';
 import { IUserRepository } from '../domain/repositories/user-repository.interface';
-import { IAuthService } from '../../auth/application/auth.service.interface';
+import {
+  AUTH_SERVICE,
+  IAuthService,
+} from '../../auth/application/auth.service.interface';
 import { FirebaseModule } from '../../shared/infra/database/firebase/firebase.module';
 import { FirebaseService } from '../../shared/infra/database/firebase/firebase.service';
 import { UserFirebaseRepository } from './database/repositories/user-firebase.repository';
-import { FirebaseAuthService } from '../../auth/infra/firebase/firebase-auth.service';
-import { UserSignInUsecase } from '../application/usecases/user-sign-in.usecase';
+import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
 
 @Module({
   imports: [AuthModule, FirebaseModule],
@@ -28,17 +30,20 @@ import { UserSignInUsecase } from '../application/usecases/user-sign-in.usecase'
       ) => {
         return new UserSignUpUsecase.UseCase(userRepository, authService);
       },
-      inject: ['UserRepository', FirebaseAuthService],
+      inject: ['UserRepository', AUTH_SERVICE],
     },
     {
-      provide: UserSignInUsecase.UseCase,
+      provide: UserSignInWithIdTokenUsecase.UseCase,
       useFactory: (
         userRepository: IUserRepository.Repository,
         authService: IAuthService,
       ) => {
-        return new UserSignInUsecase.UseCase(userRepository, authService);
+        return new UserSignInWithIdTokenUsecase.UseCase(
+          userRepository,
+          authService,
+        );
       },
-      inject: ['UserRepository', FirebaseAuthService],
+      inject: ['UserRepository', AUTH_SERVICE],
     },
   ],
   controllers: [UsersController],
