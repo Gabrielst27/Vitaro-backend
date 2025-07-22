@@ -6,6 +6,7 @@ import { SerieEntity } from '../../../../domain/entities/serie.entity';
 import { WorkoutEntity } from '../../../../domain/entities/workout.entity';
 import { IWorkoutRepository } from '../../../../domain/repositories/workout.repository.interface';
 import { WorkoutDocumentMapper } from '../mappers/workout-document.mapper';
+import { EFirebaseOperators } from '../../../../../shared/domain/enums/firebase-operators.enum';
 
 export class WorkoutFirebaseRepository
   implements IWorkoutRepository.Repository
@@ -23,7 +24,7 @@ export class WorkoutFirebaseRepository
     const firestore = await this.firebaseService.getFirestoreDb();
     const snapshot = await firestore
       .collection(this.collection)
-      .where('title', '==', title)
+      .where('title', EFirebaseOperators.EQUALS, title)
       .get();
     if (!snapshot.empty) {
       throw new ConflictException(
