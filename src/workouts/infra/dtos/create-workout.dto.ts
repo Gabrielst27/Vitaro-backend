@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateWorkoutUseCase } from '../../application/usecases/create-workout.usecase';
-import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { Type } from 'class-transformer';
 import { CreateExerciseDto } from './create-exercise.dto';

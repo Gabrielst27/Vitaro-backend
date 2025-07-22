@@ -1,6 +1,6 @@
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
-import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { IWorkoutRepository } from '../../domain/repositories/workout.repository.interface';
 import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';

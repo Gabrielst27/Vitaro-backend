@@ -1,5 +1,5 @@
 import { WorkoutEntity } from '../../domain/entities/workout.entity';
-import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 
 export type WorkoutOutput = {

@@ -1,5 +1,5 @@
 export enum EWorkoutGoals {
   hypertrophy = 'hypertrophy',
-  cardio = 'cardio',
+  weightLoss = 'weightLoss',
   strength = 'strength',
 }

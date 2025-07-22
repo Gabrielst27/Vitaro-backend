@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     try {
       request['user'] = await this.authService.verifyToken(token);
     } catch (error) {
-      throw new UnauthorizedException('Invalid token', error);
+      throw new UnauthorizedException('Invalid token', error.code);
     }
     return true;
   }

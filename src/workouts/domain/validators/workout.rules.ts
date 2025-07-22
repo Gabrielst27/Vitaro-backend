@@ -7,7 +7,7 @@ import {
   IsUUID,
   Length,
 } from 'class-validator';
-import { EWorkoutGoals } from '../enums/workout-categories.enum';
+import { EWorkoutGoals } from '../enums/workout-goals.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
 import { WorkoutProps } from '../entities/workout.entity';
 

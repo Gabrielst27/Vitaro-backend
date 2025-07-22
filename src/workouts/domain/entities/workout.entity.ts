@@ -1,6 +1,6 @@
 import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
-import { EWorkoutGoals } from '../enums/workout-categories.enum';
+import { EWorkoutGoals } from '../enums/workout-goals.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
 import { WorkoutValidatorFactory } from '../validators/workout.validator';
 import { ExerciseEntity, ExerciseProps } from './exercise.entity';
