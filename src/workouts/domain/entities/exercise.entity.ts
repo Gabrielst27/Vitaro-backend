@@ -10,38 +10,23 @@ export type ExerciseProps = {
 };
 
 export class ExerciseEntity extends Entity<ExerciseProps> {
-  private _refId: string;
-  private _name: string;
-  private _series: SerieEntity[];
-
+  private readonly _series: SerieEntity[] = [];
   constructor(props: ExerciseProps, id?: string) {
     ExerciseEntity.validate(props);
     super(props, id);
-    const series = ExerciseEntity.initializeSeries(props.series);
-    this._series = series;
+    this.initializeSeries(props.series);
   }
 
   public get refId(): string {
-    return this._refId;
+    return this.props.refId;
   }
 
   public get name(): string {
-    return this._name;
+    return this.props.name;
   }
 
   public get series(): SerieEntity[] {
     return this._series;
-  }
-
-  static initializeSeries(series: SerieProps[]): SerieEntity[] {
-    if (series.length < 1) {
-      return [];
-    }
-    const entities: SerieEntity[] = [];
-    for (const serie of series) {
-      entities.push(new SerieEntity(serie));
-    }
-    return entities;
   }
 
   static validate(props: ExerciseProps) {
@@ -49,6 +34,16 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
     const isValid = validator.validate(props);
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
+    }
+  }
+
+  private initializeSeries(series: SerieProps[]) {
+    if (series.length < 1) {
+      return;
+    }
+    for (const serie of series) {
+      const entity = new SerieEntity(serie);
+      this._series.push(entity);
     }
   }
 }

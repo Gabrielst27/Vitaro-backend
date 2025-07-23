@@ -26,12 +26,12 @@ export class SerieRules {
   restInSeconds?: number;
 
   @IsString()
-  @Length(2, 32)
+  @Length(0, 32)
   @IsOptional()
   technique?: string;
 
   @IsString()
-  @Length(2, 32)
+  @Length(0, 32)
   @IsOptional()
   accessory?: string;
 

@@ -13,14 +13,11 @@ export type UserOutput = {
   role: ERole;
   createdAt?: Date;
   updatedAt?: Date;
-  disabledAt?: Date;
+  disabledAt?: Date | null;
 };
 
 export class UserOutputMapper {
   static toOutput(entity: UserEntity): UserOutput {
-    return {
-      id: entity.id,
-      ...entity.props,
-    };
+    return entity.toJSON();
   }
 }

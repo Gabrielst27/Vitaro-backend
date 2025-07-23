@@ -2,9 +2,9 @@ import { v4 } from 'uuid';
 
 export class Entity<Props = any> {
   private readonly _id: string;
-  private _props: Props;
+  private readonly _props: Required<Props>;
 
-  constructor(props: Props, id?: string) {
+  constructor(props: Required<Props>, id?: string) {
     this._props = props;
     this._id = id ?? v4();
   }
@@ -13,11 +13,14 @@ export class Entity<Props = any> {
     return this._id;
   }
 
-  get props(): Props {
+  get props(): Required<Props> {
     return this._props;
   }
 
-  protected updateProps(props: Props) {
-    if (props !== this._props) this._props = props;
+  toJSON(): Required<{ id: string } & Props> {
+    return {
+      id: this.id,
+      ...this._props,
+    } as Required<{ id: string } & Props>;
   }
 }

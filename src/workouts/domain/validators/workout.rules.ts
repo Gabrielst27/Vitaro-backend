@@ -1,4 +1,6 @@
 import {
+  ArrayMinSize,
+  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -10,6 +12,7 @@ import {
 import { EWorkoutGoals } from '../enums/workout-goals.enum';
 import { EWorkoutSports } from '../enums/workout-sports.enum';
 import { WorkoutProps } from '../entities/workout.entity';
+import { ExerciseProps } from '../entities/exercise.entity';
 
 export class WorkoutRules {
   @IsUUID()
@@ -29,6 +32,10 @@ export class WorkoutRules {
   @IsNotEmpty()
   sport: EWorkoutSports;
 
+  @IsArray()
+  @ArrayMinSize(0)
+  exercises: ExerciseProps[];
+
   @IsDate()
   @IsOptional()
   createdAt?: Date;
@@ -42,6 +49,7 @@ export class WorkoutRules {
     title,
     goal: category,
     sport,
+    exercises,
     createdAt,
     updatedAt,
   }: WorkoutProps) {
@@ -50,6 +58,7 @@ export class WorkoutRules {
       title,
       category,
       sport,
+      exercises,
       createdAt,
       updatedAt,
     });

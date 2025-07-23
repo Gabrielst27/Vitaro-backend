@@ -16,37 +16,29 @@ export type WorkoutProps = {
 };
 
 export class WorkoutEntity extends Entity<WorkoutProps> {
-  private _authorId: string;
-  private _title: string;
-  private _goal: EWorkoutGoals;
-  private _sport: EWorkoutSports;
-  private _exercises: ExerciseEntity[];
-  private _createdAt: Date;
-  private _updatedAt: Date;
-
+  private readonly _exercises: ExerciseEntity[] = [];
   constructor(props: WorkoutProps, id?: string) {
     WorkoutEntity.validate(props);
-    super(props, id);
-    const exercises = WorkoutEntity.initializeExercises(props.exercises);
-    this._exercises = exercises;
-    this._createdAt = this.props.createdAt ?? new Date();
-    this._updatedAt = this.props.updatedAt ?? new Date();
+    const createdAt: Date = props.createdAt ?? new Date();
+    const updatedAt: Date = props.updatedAt ?? new Date();
+    super({ ...props, createdAt, updatedAt }, id);
+    this.initializeExercises(props.exercises);
   }
 
   public get authorId() {
-    return this._authorId;
+    return this.props.authorId;
   }
 
   public get title() {
-    return this._title;
+    return this.props.title;
   }
 
-  public get category() {
-    return this._goal;
+  public get goal() {
+    return this.props.goal;
   }
 
   public get sport() {
-    return this._sport;
+    return this.props.sport;
   }
 
   public get exercises() {
@@ -54,22 +46,11 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
   }
 
   public get createdAt() {
-    return this._createdAt;
+    return this.props.createdAt;
   }
 
   public get updatedAt() {
-    return this._updatedAt;
-  }
-
-  static initializeExercises(exercises: ExerciseProps[]): ExerciseEntity[] {
-    if (exercises.length < 1) {
-      return [];
-    }
-    const entities: ExerciseEntity[] = [];
-    for (const exercise of exercises) {
-      entities.push(new ExerciseEntity(exercise));
-    }
-    return entities;
+    return this.props.updatedAt;
   }
 
   static validate(props: WorkoutProps): void {
@@ -77,6 +58,16 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
     const isValid = validator.validate(props);
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
+    }
+  }
+
+  private initializeExercises(exercises: ExerciseProps[]) {
+    if (exercises.length < 1) {
+      return;
+    }
+    for (const exercise of exercises) {
+      const entity = new ExerciseEntity(exercise);
+      this._exercises.push(entity);
     }
   }
 }

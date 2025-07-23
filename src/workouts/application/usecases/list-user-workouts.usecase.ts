@@ -8,7 +8,7 @@ import { IWorkoutRepository } from '../../domain/repositories/workout.repository
 import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
 import { EFirebaseOperators } from '../../../shared/domain/enums/firebase-operators.enum';
 import {
-  Query,
+  CustomQuery,
   QueryProps,
   SearchParams,
   SearchProps,
@@ -26,11 +26,11 @@ export namespace ListUserWorkoutsUseCase {
         throw new BadRequestException('userId not provided');
       }
       const query: QueryProps = {
-        field: 'userId',
+        field: 'authorId',
         comparisonOperator: EFirebaseOperators.EQUALS,
         filter: input.userId,
       };
-      const queries: Query[] = [new Query(query)];
+      const queries: CustomQuery[] = [new CustomQuery(query)];
       const params = new SearchParams({ ...input, queries });
       const result = await this.workoutRepository.search(params);
       return this.toOutput(result);

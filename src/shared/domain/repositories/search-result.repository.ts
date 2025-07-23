@@ -1,5 +1,4 @@
 import { Entity } from '../entities/entity';
-import { Query } from './search-params.repository';
 
 export type SearchResultProps<E extends Entity> = {
   items: E[];
@@ -8,11 +7,7 @@ export type SearchResultProps<E extends Entity> = {
   perPage: number;
   sort?: string | null;
   sortDir?: string | null;
-  queries?: Query[];
-  dateField?: string | null;
-  status?: string | null;
-  from?: Date | null;
-  to?: Date | null;
+  query: any;
 };
 
 export class SearchResult<E extends Entity> {
@@ -23,11 +18,7 @@ export class SearchResult<E extends Entity> {
   readonly lastPage: number;
   readonly sort?: string | null;
   readonly sortDir?: string | null;
-  readonly queries?: Query[];
-  readonly dateField?: string | null;
-  readonly status?: string | null;
-  readonly from?: Date | null;
-  readonly to?: Date | null;
+  readonly query: any;
 
   constructor(props: SearchResultProps<E>) {
     this.items = props.items;
@@ -37,10 +28,6 @@ export class SearchResult<E extends Entity> {
     this.lastPage = Math.floor(this.total / this.perPage);
     this.sort = props.sort ?? null;
     this.sortDir = props.sortDir ?? null;
-    this.queries = props.queries ?? [];
-    this.dateField = props.dateField ?? null;
-    this.status = props.status ?? null;
-    this.from = props.from ?? null;
-    this.to = props.to ?? null;
+    this.query = props.query ?? '';
   }
 }

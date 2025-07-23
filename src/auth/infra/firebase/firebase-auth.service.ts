@@ -5,20 +5,19 @@ import {
   AuthenticatedUserOutputMapper,
 } from '../../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../../users/domain/entities/user-entity';
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { GoogleApiIdentityDto } from './dtos/google-api-identity.dto';
-import { IEnvConfigService } from '../../../shared/infra/env-config/env-config.service.interface';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class FirebaseAuthService implements IAuthService {
-  constructor(private envConfigService: IEnvConfigService) {}
-
-  async createUser(user: UserEntity): Promise<AuthenticatedUserOutput> {
+  async createUser(
+    user: UserEntity,
+    password: string,
+  ): Promise<AuthenticatedUserOutput> {
     try {
       const authUser = await getAuth().createUser({
         uid: user.id,
-        email: user.props.email,
-        password: user.props.password,
-        displayName: user.props.name,
+        email: user.email,
+        password: password,
+        displayName: user.name,
       });
       if (!authUser) {
         throw new Error('Firebase signUp failed');

@@ -33,12 +33,10 @@ export namespace UserSignUpUsecase {
       const entity = new UserEntity({
         name,
         email,
-        password,
         isActive: false,
         role: ERole.COMMON,
       });
-      const authUser = await this.authService.createUser(entity);
-      delete entity.props.password;
+      const authUser = await this.authService.createUser(entity, password);
       entity.props.isActive = true;
       await this.userRepository.insert(entity);
       return AuthenticatedUserOutputMapper.toOutput(entity, authUser.token);

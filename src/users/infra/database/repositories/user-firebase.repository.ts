@@ -16,12 +16,12 @@ import {
 export class UserFirebaseRepository implements IUserRepository.Repository {
   sortableFields: string[];
   searchableFields: string[];
-  dateFields: string[];
+  insensitiveFields: string[];
   collection: string = 'users';
 
   constructor(private firebaseService: FirebaseService) {}
 
-  search(params: SearchParams): IUserRepository.SearchOutput {
+  search(params: SearchParams): Promise<IUserRepository.SearchOutput> {
     throw new Error('Method not implemented.');
   }
 

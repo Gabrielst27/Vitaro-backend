@@ -1,3 +1,4 @@
+import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 import { SerieValidatorFactory } from '../validators/serie.validator';
 
@@ -10,43 +11,37 @@ export type SerieProps = {
   accessory?: string;
 };
 
-export class SerieEntity {
-  private _position: number;
-  private _weight: number;
-  private _reps: number;
-  private _restInSeconds: number;
-  private _technique: string;
-  private _accessory: string;
-
+export class SerieEntity extends Entity<SerieProps> {
   constructor(props: SerieProps, id?: string) {
     SerieEntity.validate(props);
-    this._restInSeconds = props.restInSeconds || 90;
-    this._technique = props.technique ?? '';
-    this._accessory = props.accessory ?? '';
+    const restInSeconds = props.restInSeconds || 90;
+    const technique = props.technique ?? '';
+    const accessory = props.accessory ?? '';
+    super({ ...props, restInSeconds, technique, accessory }, id);
   }
 
   get position(): number {
-    return this._position;
+    return this.props.position;
   }
 
   get weight(): number {
-    return this._weight;
+    return this.props.weight;
   }
 
   get reps(): number {
-    return this._reps;
+    return this.props.reps;
   }
 
-  get restInSeconds(): number | undefined {
-    return this._restInSeconds;
+  get restInSeconds(): number {
+    return this.props.restInSeconds;
   }
 
-  get technique(): string | undefined {
-    return this._technique;
+  get technique(): string {
+    return this.props.technique;
   }
 
-  get accessory(): string | undefined {
-    return this._accessory;
+  get accessory(): string {
+    return this.props.accessory;
   }
 
   static validate(props: SerieProps) {
