@@ -22,8 +22,8 @@ export class UserEntity extends Entity<UserProps> {
     const age = props.age ?? 0;
     const height = props.height ?? 0;
     const weight = props.weight ?? 0;
-    const createdAt: Date = props.createdAt ?? new Date();
-    const updatedAt: Date = props.updatedAt ?? new Date();
+    const createdAt = props.createdAt ?? new Date();
+    const updatedAt = props.updatedAt ?? new Date();
     const disabledAt = props.disabledAt ?? null;
     super(
       {
@@ -85,5 +85,11 @@ export class UserEntity extends Entity<UserProps> {
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
     }
+  }
+
+  updateProps(props: UserProps): void {
+    UserEntity.validate(props);
+    props.updatedAt = new Date();
+    super.updateProps(props);
   }
 }

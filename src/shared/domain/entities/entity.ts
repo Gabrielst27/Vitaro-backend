@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 
 export class Entity<Props = any> {
   private readonly _id: string;
-  private readonly _props: Required<Props>;
+  private _props: Required<Props>;
 
   constructor(props: Required<Props>, id?: string) {
     this._props = props;
@@ -15,6 +15,13 @@ export class Entity<Props = any> {
 
   get props(): Required<Props> {
     return this._props;
+  }
+
+  protected updateProps(props: Props): void {
+    this._props = {
+      ...this._props,
+      ...props,
+    };
   }
 
   toJSON(): Required<{ id: string } & Props> {
