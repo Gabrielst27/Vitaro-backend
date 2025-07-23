@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UserSignUpUsecase } from '../application/usecases/user-sign-up.usecase';
 import { UserSignUpDto } from './dtos/user-sign-up.dto';
 import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
@@ -6,6 +14,7 @@ import { UserSignInDto } from './dtos/user-sign-in.dto';
 import { AuthGuard } from '../../auth/infra/auth.guard';
 import { CurrentUser } from '../../shared/infra/decorators/current-user/current-user.decorator';
 import { FindCurrentUserUseCase } from '../application/usecases/find-current-user.usecase';
+import { EditUserUseCase } from '../application/usecases/edit-user.usecase';
 
 @Controller('users')
 export class UsersController {
@@ -17,6 +26,9 @@ export class UsersController {
 
   @Inject(FindCurrentUserUseCase.UseCase)
   private findCurrentUserUseCase: FindCurrentUserUseCase.UseCase;
+
+  @Inject(EditUserUseCase.UseCase)
+  private editUserUseCase: EditUserUseCase.UseCase;
 
   @Post('sign-up')
   async signUp(@Body() userSignUpDto: UserSignUpDto) {
@@ -32,5 +44,10 @@ export class UsersController {
   @UseGuards(AuthGuard)
   async findCurrentUser(@CurrentUser() userId: string) {
     return await this.findCurrentUserUseCase.execute({}, userId);
+  }
+
+  @Put('edit')
+  async editUser(@Body() editUserDto: any, @CurrentUser() userId: string) {
+    return await this.editUserUseCase.execute(editUserDto, userId);
   }
 }

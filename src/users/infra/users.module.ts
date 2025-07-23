@@ -12,6 +12,7 @@ import { FirebaseService } from '../../shared/infra/database/firebase/firebase.s
 import { UserFirebaseRepository } from './database/repositories/user-firebase.repository';
 import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
 import { FindCurrentUserUseCase } from '../application/usecases/find-current-user.usecase';
+import { EditUserUseCase } from '../application/usecases/edit-user.usecase';
 
 @Module({
   imports: [AuthModule, FirebaseModule],
@@ -50,6 +51,13 @@ import { FindCurrentUserUseCase } from '../application/usecases/find-current-use
       provide: FindCurrentUserUseCase.UseCase,
       useFactory: (userRepository: IUserRepository.Repository) => {
         return new FindCurrentUserUseCase.UseCase(userRepository);
+      },
+      inject: ['UserRepository'],
+    },
+    {
+      provide: EditUserUseCase.UseCase,
+      useFactory: (userRepository: IUserRepository.Repository) => {
+        return new EditUserUseCase.UseCase(userRepository);
       },
       inject: ['UserRepository'],
     },
