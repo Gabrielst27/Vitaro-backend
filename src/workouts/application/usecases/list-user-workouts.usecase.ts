@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import {
   PaginationOutput,
   PaginationOutputMapper,
@@ -13,6 +12,7 @@ import {
   SearchParams,
   SearchProps,
 } from '../../../shared/domain/repositories/search-params.repository';
+import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
 
 export namespace ListUserWorkoutsUseCase {
   export type Input = SearchProps & { userId: string };
@@ -23,7 +23,7 @@ export namespace ListUserWorkoutsUseCase {
 
     async execute(input: Input): Promise<Output> {
       if (!input.userId) {
-        throw new BadRequestException('userId not provided');
+        throw new BadRequestError('userId not provided');
       }
       const query: QueryProps = {
         field: 'authorId',

@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { IUserRepository } from '../../domain/repositories/user-repository.interface';
 import { IAuthService } from '../../../auth/application/auth.service.interface';
@@ -8,6 +7,7 @@ import {
   AuthenticatedUserOutput,
   AuthenticatedUserOutputMapper,
 } from '../outputs/authenticated-user.output';
+import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
 
 export namespace UserSignUpUsecase {
   export type Input = {
@@ -27,7 +27,7 @@ export namespace UserSignUpUsecase {
     async execute(input: Input): Promise<AuthenticatedUserOutput> {
       const { name, email, password } = input;
       if (!name || !email || !password) {
-        throw new BadRequestException('Input not provided');
+        throw new BadRequestError('Input not provided');
       }
       await this.userRepository.emailExists(email);
       const entity = new UserEntity({

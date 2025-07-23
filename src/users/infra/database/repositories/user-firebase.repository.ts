@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  NotFoundException,
-  OnModuleInit,
-} from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { SearchParams } from '../../../../shared/domain/repositories/search-params.repository';
 import { FirebaseService } from '../../../../shared/infra/database/firebase/firebase.service';
 import { UserEntity } from '../../../domain/entities/user-entity';

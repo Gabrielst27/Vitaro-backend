@@ -1,4 +1,5 @@
 import {
+  ArrayMinSize,
   IsArray,
   IsEnum,
   IsNotEmpty,
@@ -27,6 +28,7 @@ export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
   sport: EWorkoutSports;
 
   @IsArray()
+  @ArrayMinSize(0)
   @ValidateNested()
   @Type(() => CreateExerciseDto)
   exercises: CreateExerciseDto[];

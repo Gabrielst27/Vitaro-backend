@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { SearchParams } from '../../../../../shared/domain/repositories/search-params.repository';
 import { FirebaseService } from '../../../../../shared/infra/database/firebase/firebase.service';
 import { ExerciseEntity } from '../../../../domain/entities/exercise.entity';
@@ -11,6 +11,7 @@ import {
 } from '../mappers/workout-document.mapper';
 import { EFirebaseOperators } from '../../../../../shared/domain/enums/firebase-operators.enum';
 import { SearchResult } from '../../../../../shared/domain/repositories/search-result.repository';
+import { BadRequestError } from '../../../../../shared/application/errors/bad-request.error';
 
 export class WorkoutFirebaseRepository
   implements IWorkoutRepository.Repository
@@ -103,7 +104,7 @@ export class WorkoutFirebaseRepository
     if (params.queries) {
       for (const filter of params.queries) {
         if (!this.searchableFields.includes(filter.field)) {
-          throw new BadRequestException(
+          throw new BadRequestError(
             `${filter.field} is not a searchable field`,
           );
         }

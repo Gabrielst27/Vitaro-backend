@@ -1,4 +1,3 @@
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
@@ -7,6 +6,8 @@ import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
 import { WorkoutEntity } from '../../domain/entities/workout.entity';
 import { SerieProps } from '../../domain/entities/serie.entity';
 import { ExerciseProps } from '../../domain/entities/exercise.entity';
+import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 
 export namespace CreateWorkoutUseCase {
   export type Input = {
@@ -32,22 +33,11 @@ export namespace CreateWorkoutUseCase {
 
     async execute(input: Input, authorId?: string): Promise<WorkoutOutput> {
       if (!authorId) {
-        throw new UnauthorizedException('User is not authenticated');
+        throw new UnauthorizedError('User is not authenticated');
       }
       const { title, goal, sport, exercises } = input;
       if (!title || !goal || !sport || !exercises) {
-        throw new BadRequestException('Workout input not provided');
-      }
-      if (exercises.length < 1) {
-        throw new BadRequestException('Workout must have at least 1 exercise');
-      }
-      for (let exercise of exercises) {
-        if (exercise.series.length < 1) {
-          throw new BadRequestException(
-            exercise.name,
-            ' must have at least 1 serie',
-          );
-        }
+        throw new BadRequestError('Workout input not provided');
       }
       await this.workoutRepository.titleExists(title);
       const exercisesProps: ExerciseProps[] = [];

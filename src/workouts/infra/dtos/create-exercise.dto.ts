@@ -8,7 +8,6 @@ import {
   Length,
   ValidateNested,
 } from 'class-validator';
-import { SerieRules } from '../../domain/validators/serie.rules';
 import { CreateSerieDto } from './create-serie.dto';
 
 export class CreateExerciseDto {
@@ -23,6 +22,7 @@ export class CreateExerciseDto {
   name: string;
 
   @IsArray()
+  @ArrayMinSize(0)
   @ValidateNested()
   @Type(() => CreateSerieDto)
   series: CreateSerieDto[];
