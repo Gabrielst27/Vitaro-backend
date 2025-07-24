@@ -47,6 +47,7 @@ export class UsersController {
   }
 
   @Put('edit')
+  @UseGuards(AuthGuard)
   async editUser(@Body() editUserDto: any, @CurrentUser() userId: string) {
     return await this.editUserUseCase.execute(editUserDto, userId);
   }

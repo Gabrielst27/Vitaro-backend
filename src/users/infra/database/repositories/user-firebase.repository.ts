@@ -10,9 +10,25 @@ import {
 } from '../mappers/user-document.mapper';
 
 export class UserFirebaseRepository implements IUserRepository.Repository {
-  sortableFields: string[];
-  searchableFields: string[];
-  insensitiveFields: string[];
+  sortableFields: string[] = [
+    'name',
+    'email',
+    'age',
+    'height',
+    'weight',
+    'createdAt',
+  ];
+  searchableFields: string[] = [
+    'name',
+    'email',
+    'age',
+    'height',
+    'weight',
+    'createdAt',
+    'updatedAt',
+    'disabledAt',
+  ];
+  insensitiveFields: string[] = ['name', 'email'];
   collection: string = 'users';
 
   constructor(private firebaseService: FirebaseService) {}
@@ -36,9 +52,20 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
     }
     return UserDocumentMapper.toEntity(data as UserDocument, id);
   }
-  update(entity: UserEntity): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async update(entity: UserEntity): Promise<void> {
+    const firestore = await this.firebaseService.getFirestoreDb();
+    const document = UserDocumentMapper.toDocument(entity);
+    try {
+      await firestore
+        .collection(this.collection)
+        .doc(entity.id)
+        .update(document);
+    } catch {
+      throw new NotFoundException('User does not exist');
+    }
   }
+
   delete(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
