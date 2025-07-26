@@ -9,6 +9,7 @@ import {
   AUTH_SERVICE,
   IAuthService,
 } from '../application/auth.service.interface';
+import { ErrorCodes } from '../../shared/domain/enums/error-codes.enum';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,12 +19,12 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.getToken(request);
     if (!token) {
-      throw new UnauthorizedException('Token not provided');
+      throw new UnauthorizedException(ErrorCodes.TOKEN_NOT_PROVIDED);
     }
     try {
       request['user'] = await this.authService.verifyToken(token);
     } catch (error) {
-      throw new UnauthorizedException('Invalid token', error.code);
+      throw new UnauthorizedException(ErrorCodes.INVALID_TOKEN);
     }
     return true;
   }

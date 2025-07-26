@@ -8,6 +8,7 @@ import { SerieProps } from '../../domain/entities/serie.entity';
 import { ExerciseProps } from '../../domain/entities/exercise.entity';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
 import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export namespace CreateWorkoutUseCase {
   export type Input = {
@@ -33,11 +34,11 @@ export namespace CreateWorkoutUseCase {
 
     async execute(input: Input, authorId?: string): Promise<WorkoutOutput> {
       if (!authorId) {
-        throw new UnauthorizedError('User is not authenticated');
+        throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
       }
       const { title, goal, sport, exercises } = input;
       if (!title || !goal || !sport || !exercises) {
-        throw new BadRequestError('Workout input not provided');
+        throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
       await this.workoutRepository.titleExists(title);
       const exercisesProps: ExerciseProps[] = [];

@@ -6,6 +6,7 @@ import {
 } from '../../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../../users/domain/entities/user-entity';
 import { UnauthorizedException } from '@nestjs/common';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export class FirebaseAuthService implements IAuthService {
   async createUser(
@@ -39,7 +40,7 @@ export class FirebaseAuthService implements IAuthService {
       return decodedToken.user_id;
     } catch (error) {
       if (error.response.status >= 400 && error.response.status <= 500) {
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException(ErrorCodes.INVALID_CREDENTIALS);
       }
       throw new Error('ERR-0001');
     }

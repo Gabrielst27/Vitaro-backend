@@ -8,6 +8,7 @@ import {
   AuthenticatedUserOutputMapper,
 } from '../outputs/authenticated-user.output';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export namespace UserSignUpUsecase {
   export type Input = {
@@ -27,7 +28,7 @@ export namespace UserSignUpUsecase {
     async execute(input: Input): Promise<AuthenticatedUserOutput> {
       const { name, email, password } = input;
       if (!name || !email || !password) {
-        throw new BadRequestError('Input not provided');
+        throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
       await this.userRepository.emailExists(email);
       const entity = new UserEntity({

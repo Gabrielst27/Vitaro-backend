@@ -13,6 +13,7 @@ import {
   SearchProps,
 } from '../../../shared/domain/repositories/search-params.repository';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export namespace ListUserWorkoutsUseCase {
   export type Input = SearchProps & { userId: string };
@@ -23,7 +24,7 @@ export namespace ListUserWorkoutsUseCase {
 
     async execute(input: Input): Promise<Output> {
       if (!input.userId) {
-        throw new BadRequestError('userId not provided');
+        throw new BadRequestError(ErrorCodes.ID_NOT_PROVIDED);
       }
       const query: QueryProps = {
         field: 'authorId',

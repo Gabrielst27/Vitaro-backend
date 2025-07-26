@@ -8,6 +8,7 @@ import {
   UserDocument,
   UserDocumentMapper,
 } from '../mappers/user-document.mapper';
+import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
 
 export class UserFirebaseRepository implements IUserRepository.Repository {
   sortableFields: string[] = [
@@ -48,7 +49,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
     const snapshot = await firestore.collection(this.collection).doc(id).get();
     const data = snapshot.data();
     if (!data) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ErrorCodes.USER_NOT_FOUND);
     }
     return UserDocumentMapper.toEntity(data as UserDocument, id);
   }
@@ -62,12 +63,12 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
         .doc(entity.id)
         .update(document);
     } catch {
-      throw new NotFoundException('User does not exist');
+      throw new NotFoundException(ErrorCodes.USER_NOT_FOUND);
     }
   }
 
   delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.1');
   }
   findByEmail(email: string): Promise<UserEntity> {
     throw new Error('Method not implemented.');
@@ -81,7 +82,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
       .limit(1)
       .get();
     if (snapshot.docs.length > 0) {
-      throw new ConflictException('This email is already in use');
+      throw new ConflictException(ErrorCodes.EMAIL_ALREADY_EXISTS);
     }
   }
 

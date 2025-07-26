@@ -4,6 +4,7 @@ import { IUserRepository } from '../../domain/repositories/user-repository.inter
 import { IAuthService } from '../../../auth/application/auth.service.interface';
 import { UserOutput, UserOutputMapper } from '../outputs/user.output';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export namespace UserSignInWithIdTokenUsecase {
   export type Input = {
@@ -20,7 +21,7 @@ export namespace UserSignInWithIdTokenUsecase {
 
     async execute(input: Input): Promise<UserOutput> {
       if (!input.idToken) {
-        throw new BadRequestError('Input not provided');
+        throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
       const id = await this.authService.signInFirebase(input.idToken);
       const entity = await this.userRepository.findById(id);

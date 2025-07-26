@@ -1,3 +1,4 @@
+import { ErrorCodes } from '../enums/error-codes.enum';
 import { EFirebaseOperators } from '../enums/firebase-operators.enum';
 import {
   EntityValidationError,
@@ -26,7 +27,7 @@ export class CustomQuery {
 
   static validate(props: QueryProps) {
     if (!props.field || !props.comparisonOperator || !props.filter) {
-      throw new ValidationError('Invalid data');
+      throw new ValidationError(ErrorCodes.INVALID_QUERY);
     }
   }
 }
