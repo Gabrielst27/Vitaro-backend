@@ -16,7 +16,7 @@ export type WorkoutProps = {
 };
 
 export class WorkoutEntity extends Entity<WorkoutProps> {
-  private readonly _exercises: ExerciseEntity[] = [];
+  private _exercises: ExerciseEntity[] = [];
   constructor(props: WorkoutProps, id?: string) {
     WorkoutEntity.validate(props);
     const createdAt: Date = props.createdAt ?? new Date();
@@ -59,6 +59,24 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
     }
+  }
+
+  addExercise(exercise: ExerciseProps) {
+    const entity = new ExerciseEntity(exercise);
+    this._exercises.push(entity);
+  }
+
+  removeExercise(exerciseId: string) {
+    const exercisesFiltered = this.exercises.filter(
+      (item) => item.id !== exerciseId,
+    );
+    this._exercises = exercisesFiltered;
+  }
+
+  updateProps(props: WorkoutProps): void {
+    WorkoutEntity.validate(props);
+    super.updateProps(props);
+    this.props.updatedAt = new Date();
   }
 
   private initializeExercises(exercises: ExerciseProps[]) {

@@ -51,4 +51,9 @@ export class SerieEntity extends Entity<SerieProps> {
       throw new EntityValidationError(validator.errors);
     }
   }
+
+  updateProps(props: SerieProps): void {
+    SerieEntity.validate(props);
+    super.updateProps(props);
+  }
 }

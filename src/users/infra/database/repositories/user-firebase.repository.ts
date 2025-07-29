@@ -1,4 +1,4 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { SearchParams } from '../../../../shared/domain/repositories/search-params.repository';
 import { FirebaseService } from '../../../../shared/infra/database/firebase/firebase.service';
 import { UserEntity } from '../../../domain/entities/user-entity';
@@ -9,6 +9,7 @@ import {
   UserDocumentMapper,
 } from '../mappers/user-document.mapper';
 import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
+import { NotFoundError } from '../../../../shared/application/errors/not-found.error';
 
 export class UserFirebaseRepository implements IUserRepository.Repository {
   sortableFields: string[] = [
@@ -49,7 +50,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
     const snapshot = await firestore.collection(this.collection).doc(id).get();
     const data = snapshot.data();
     if (!data) {
-      throw new NotFoundException(ErrorCodes.USER_NOT_FOUND);
+      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
     }
     return UserDocumentMapper.toEntity(data as UserDocument, id);
   }
@@ -63,7 +64,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
         .doc(entity.id)
         .update(document);
     } catch {
-      throw new NotFoundException(ErrorCodes.USER_NOT_FOUND);
+      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
     }
   }
 

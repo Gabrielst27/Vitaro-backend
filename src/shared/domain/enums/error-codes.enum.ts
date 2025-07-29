@@ -5,6 +5,7 @@ export enum ErrorCodes {
   USER_NOT_AUTHENTICATED = 'user-not-authenticated',
   USER_NOT_FOUND = 'user-not-found',
   EMAIL_ALREADY_EXISTS = 'email-already-exists',
+  WORKOUT_NOT_FOUND = 'workout-not-found',
   ID_NOT_PROVIDED = 'id-not-provided',
   INPUT_NOT_PROVIDED = 'input-not-provided',
   INVALID_QUERY = 'invalid-query',

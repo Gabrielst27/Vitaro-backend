@@ -10,7 +10,7 @@ export type ExerciseProps = {
 };
 
 export class ExerciseEntity extends Entity<ExerciseProps> {
-  private readonly _series: SerieEntity[] = [];
+  private _series: SerieEntity[] = [];
   constructor(props: ExerciseProps, id?: string) {
     ExerciseEntity.validate(props);
     super(props, id);
@@ -35,6 +35,23 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
     }
+  }
+
+  addSerie(serie: SerieProps) {
+    const newSerie: SerieEntity = new SerieEntity(serie);
+    this._series.push(newSerie);
+  }
+
+  removeSerie(serieId: string) {
+    const newSeries: SerieEntity[] = this._series.filter(
+      (item) => item.id !== serieId,
+    );
+    this._series = newSeries;
+  }
+
+  updateProps(props: ExerciseProps) {
+    ExerciseEntity.validate(props);
+    super.updateProps(props);
   }
 
   private initializeSeries(series: SerieProps[]) {

@@ -12,6 +12,8 @@ import {
 import { EFirebaseOperators } from '../../../../../shared/domain/enums/firebase-operators.enum';
 import { SearchResult } from '../../../../../shared/domain/repositories/search-result.repository';
 import { BadRequestError } from '../../../../../shared/application/errors/bad-request.error';
+import { NotFoundError } from '../../../../../shared/application/errors/not-found.error';
+import { ErrorCodes } from '../../../../../shared/domain/enums/error-codes.enum';
 
 export class WorkoutFirebaseRepository
   implements IWorkoutRepository.Repository
@@ -145,8 +147,14 @@ export class WorkoutFirebaseRepository
     await workoutDocRef.set(workoutDocument);
   }
 
-  findById(id: string): Promise<WorkoutEntity> {
-    throw new Error('Method not implemented.');
+  async findById(id: string): Promise<WorkoutEntity> {
+    const firestore = await this.firebaseService.getFirestoreDb();
+    const snapshot = await firestore.collection(this.collection).doc(id).get();
+    const data = snapshot.data();
+    if (!data) {
+      throw new NotFoundError(ErrorCodes.WORKOUT_NOT_FOUND);
+    }
+    return WorkoutDocumentMapper.toEntity(data as WorkoutDocument);
   }
 
   update(entity: WorkoutEntity): Promise<void> {
