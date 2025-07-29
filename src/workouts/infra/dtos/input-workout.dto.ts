@@ -7,13 +7,12 @@ import {
   Length,
   ValidateNested,
 } from 'class-validator';
-import { CreateWorkoutUseCase } from '../../application/usecases/create-workout.usecase';
 import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { Type } from 'class-transformer';
-import { CreateExerciseDto } from './create-exercise.dto';
+import { InputExerciseDto } from './input-exercise.dto';
 
-export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
+export class InputWorkoutDto {
   @IsString()
   @Length(4, 32)
   @IsNotEmpty()
@@ -30,6 +29,6 @@ export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
   @IsArray()
   @ArrayMinSize(0)
   @ValidateNested()
-  @Type(() => CreateExerciseDto)
-  exercises: CreateExerciseDto[];
+  @Type(() => InputExerciseDto)
+  exercises: InputExerciseDto[];
 }

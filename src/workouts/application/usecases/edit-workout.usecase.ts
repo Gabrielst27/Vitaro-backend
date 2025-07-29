@@ -12,7 +12,6 @@ import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
 
 export namespace EditWorkoutUseCase {
   export type Input = {
-    userId: string;
     id: string;
     title: string;
     goal: EWorkoutGoals;
@@ -48,6 +47,7 @@ export namespace EditWorkoutUseCase {
       if (entity.authorId !== userId) {
         throw new ForbiddenError(ErrorCodes.FORBIDDEN);
       }
+      entity.updateProps({ ...entity.props, title, goal, sport });
       this.removeExercises(entity, exercises);
       this.updateExercises(entity, exercises);
       await this.workoutRepository.update(entity);

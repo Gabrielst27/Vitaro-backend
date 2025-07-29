@@ -8,9 +8,9 @@ import {
   Length,
   ValidateNested,
 } from 'class-validator';
-import { CreateSerieDto } from './create-serie.dto';
+import { InputSerieDto } from './input-serie.dto';
 
-export class CreateExerciseDto {
+export class InputExerciseDto {
   @IsNumberString()
   @Length(4, 4)
   @IsNotEmpty()
@@ -24,6 +24,6 @@ export class CreateExerciseDto {
   @IsArray()
   @ArrayMinSize(0)
   @ValidateNested()
-  @Type(() => CreateSerieDto)
-  series: CreateSerieDto[];
+  @Type(() => InputSerieDto)
+  series: InputSerieDto[];
 }

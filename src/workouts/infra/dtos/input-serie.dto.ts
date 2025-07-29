@@ -7,7 +7,7 @@ import {
   Length,
 } from 'class-validator';
 
-export class CreateSerieDto {
+export class InputSerieDto {
   @IsInt()
   @IsNotEmpty()
   position: number;
@@ -21,16 +21,16 @@ export class CreateSerieDto {
   reps: number;
 
   @IsInt()
-  @IsOptional()
-  restInSeconds?: number;
+  @IsNotEmpty()
+  restInSeconds: number;
 
   @IsString()
-  @Length(2, 32)
+  @Length(0, 32)
   @IsOptional()
-  technique?: string;
+  technique: string;
 
   @IsString()
-  @Length(2, 32)
+  @Length(0, 32)
   @IsOptional()
-  accessory?: string;
+  accessory: string;
 }

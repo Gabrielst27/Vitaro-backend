@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateWorkoutUseCase } from '../application/usecases/create-workout.usecase';
-import { CreateWorkoutDto } from './dtos/create-workout.dto';
+import { InputWorkoutDto } from './dtos/input-workout.dto';
 import { AuthGuard } from '../../auth/infra/auth.guard';
 import { CurrentUser } from '../../shared/infra/decorators/current-user/current-user.decorator';
 import { ListUserWorkoutsUseCase } from '../application/usecases/list-user-workouts.usecase';
@@ -31,7 +31,7 @@ export class WorkoutsController {
 
   @Post('create-workout')
   async createWorkout(
-    @Body() createWorkoutDto: CreateWorkoutDto,
+    @Body() createWorkoutDto: InputWorkoutDto,
     @CurrentUser() userId: string,
   ) {
     return this.createWorkoutUseCase.execute(createWorkoutDto, userId);
@@ -49,14 +49,8 @@ export class WorkoutsController {
   async editWorkout(
     @Param('id') id: string,
     @CurrentUser() userId: string,
-    @Body() editWorkoutDto: any,
+    @Body() editWorkoutDto: InputWorkoutDto,
   ) {
-    return this.editWorkoutUseCase.execute(
-      {
-        ...editWorkoutDto,
-        id,
-      },
-      userId,
-    );
+    return this.editWorkoutUseCase.execute({ ...editWorkoutDto, id }, userId);
   }
 }

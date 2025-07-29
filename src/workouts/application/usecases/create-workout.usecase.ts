@@ -22,9 +22,9 @@ export namespace CreateWorkoutUseCase {
         position: number;
         weight: number;
         reps: number;
-        restInSeconds?: number;
-        technique?: string;
-        accessory?: string;
+        restInSeconds: number;
+        technique: string;
+        accessory: string;
       }[];
     }[];
   };
