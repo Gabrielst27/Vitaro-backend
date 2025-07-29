@@ -64,6 +64,7 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
   addExercise(exercise: ExerciseProps) {
     const entity = new ExerciseEntity(exercise);
     this._exercises.push(entity);
+    this.updateExercises();
   }
 
   removeExercise(exerciseId: string) {
@@ -71,12 +72,21 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
       (item) => item.id !== exerciseId,
     );
     this._exercises = exercisesFiltered;
+    this.updateExercises();
   }
 
   updateProps(props: WorkoutProps): void {
     WorkoutEntity.validate(props);
     super.updateProps(props);
     this.props.updatedAt = new Date();
+  }
+
+  updateExercises() {
+    const newPropsExercises: ExerciseProps[] = [];
+    for (const entity of this._exercises) {
+      newPropsExercises.push(entity.toJSON());
+    }
+    this.props.exercises = newPropsExercises;
   }
 
   private initializeExercises(exercises: ExerciseProps[]) {

@@ -45,12 +45,12 @@ export class WorkoutDocumentMapper {
     };
   }
 
-  static toEntity(document: WorkoutDocument): WorkoutEntity {
+  static toEntity(document: WorkoutDocument, id: string): WorkoutEntity {
     const createdAt: Date =
       WorkoutDocumentMapper.convertDate(document.createdAt) || new Date();
     const updatedAt: Date =
       WorkoutDocumentMapper.convertDate(document.updatedAt) || new Date();
-    return new WorkoutEntity({ ...document, createdAt, updatedAt });
+    return new WorkoutEntity({ ...document, createdAt, updatedAt }, id);
   }
 
   private static convertDate(value: any): Date | undefined {

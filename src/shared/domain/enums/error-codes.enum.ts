@@ -3,6 +3,7 @@ export enum ErrorCodes {
   INVALID_TOKEN = 'invalid-token',
   INVALID_CREDENTIALS = 'invalid-credentials',
   USER_NOT_AUTHENTICATED = 'user-not-authenticated',
+  FORBIDDEN = 'forbidden',
   USER_NOT_FOUND = 'user-not-found',
   EMAIL_ALREADY_EXISTS = 'email-already-exists',
   WORKOUT_NOT_FOUND = 'workout-not-found',

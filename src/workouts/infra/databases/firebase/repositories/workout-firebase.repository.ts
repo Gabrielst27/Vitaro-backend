@@ -125,7 +125,9 @@ export class WorkoutFirebaseRepository
     const entities: WorkoutEntity[] = [];
     for (const item of snapshot.docs) {
       const doc = item.data();
-      entities.push(WorkoutDocumentMapper.toEntity(doc as WorkoutDocument));
+      entities.push(
+        WorkoutDocumentMapper.toEntity(doc as WorkoutDocument, item.id),
+      );
     }
     return new SearchResult<WorkoutEntity>({
       items: entities,
@@ -154,11 +156,13 @@ export class WorkoutFirebaseRepository
     if (!data) {
       throw new NotFoundError(ErrorCodes.WORKOUT_NOT_FOUND);
     }
-    return WorkoutDocumentMapper.toEntity(data as WorkoutDocument);
+    return WorkoutDocumentMapper.toEntity(data as WorkoutDocument, id);
   }
 
-  update(entity: WorkoutEntity): Promise<void> {
-    throw new Error('Method not implemented.');
+  async update(entity: WorkoutEntity): Promise<void> {
+    const document = WorkoutDocumentMapper.toDocument(entity);
+    const firestore = await this.firebaseService.getFirestoreDb();
+    await firestore.collection(this.collection).doc(entity.id).set(document);
   }
 
   delete(id: string): Promise<void> {

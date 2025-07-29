@@ -7,6 +7,7 @@ import { CreateWorkoutUseCase } from '../application/usecases/create-workout.use
 import { IWorkoutRepository } from '../domain/repositories/workout.repository.interface';
 import { AuthModule } from '../../auth/infra/auth.module';
 import { ListUserWorkoutsUseCase } from '../application/usecases/list-user-workouts.usecase';
+import { EditWorkoutUseCase } from '../application/usecases/edit-workout.usecase';
 
 @Module({
   imports: [FirebaseModule, AuthModule],
@@ -30,6 +31,13 @@ import { ListUserWorkoutsUseCase } from '../application/usecases/list-user-worko
       provide: ListUserWorkoutsUseCase.UseCase,
       useFactory: (workoutRepository: IWorkoutRepository.Repository) => {
         return new ListUserWorkoutsUseCase.UseCase(workoutRepository);
+      },
+      inject: ['WorkoutRepository'],
+    },
+    {
+      provide: EditWorkoutUseCase.UseCase,
+      useFactory: (workoutRepository: IWorkoutRepository.Repository) => {
+        return new EditWorkoutUseCase.UseCase(workoutRepository);
       },
       inject: ['WorkoutRepository'],
     },

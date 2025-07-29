@@ -40,6 +40,7 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
   addSerie(serie: SerieProps) {
     const newSerie: SerieEntity = new SerieEntity(serie);
     this._series.push(newSerie);
+    this.updateSeries();
   }
 
   removeSerie(serieId: string) {
@@ -47,11 +48,20 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
       (item) => item.id !== serieId,
     );
     this._series = newSeries;
+    this.updateSeries();
   }
 
   updateProps(props: ExerciseProps) {
     ExerciseEntity.validate(props);
     super.updateProps(props);
+  }
+
+  updateSeries() {
+    const newPropsSeries: SerieProps[] = [];
+    for (const entity of this._series) {
+      newPropsSeries.push(entity.toJSON());
+    }
+    this.props.series = newPropsSeries;
   }
 
   private initializeSeries(series: SerieProps[]) {

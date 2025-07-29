@@ -1,4 +1,5 @@
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { ForbiddenError } from '../../../shared/application/errors/forbidden.error';
 import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
@@ -7,10 +8,11 @@ import { WorkoutEntity } from '../../domain/entities/workout.entity';
 import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { IWorkoutRepository } from '../../domain/repositories/workout.repository.interface';
-import { WorkoutOutput } from '../outputs/workout.output';
+import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
 
 export namespace EditWorkoutUseCase {
   export type Input = {
+    userId: string;
     id: string;
     title: string;
     goal: EWorkoutGoals;
@@ -34,8 +36,8 @@ export namespace EditWorkoutUseCase {
   export class UseCase implements IUsecase<Input, Output> {
     constructor(private workoutRepository: IWorkoutRepository.Repository) {}
 
-    async execute(input: Input, authorId?: string): Promise<WorkoutOutput> {
-      if (!authorId) {
+    async execute(input: Input, userId?: string): Promise<WorkoutOutput> {
+      if (!userId) {
         throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
       }
       const { id, title, goal, sport, exercises } = input;
@@ -43,9 +45,13 @@ export namespace EditWorkoutUseCase {
         throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
       const entity = await this.workoutRepository.findById(id);
+      if (entity.authorId !== userId) {
+        throw new ForbiddenError(ErrorCodes.FORBIDDEN);
+      }
       this.removeExercises(entity, exercises);
       this.updateExercises(entity, exercises);
-      throw new Error('Method not implemented.');
+      await this.workoutRepository.update(entity);
+      return WorkoutOutputMapper.toOutput(entity);
     }
 
     private removeExercises(
@@ -76,14 +82,13 @@ export namespace EditWorkoutUseCase {
             .updateProps(exerciseProps);
           this.removeSeries(
             workout.exercises.find((ex) => ex.name === exerciseProps.name)!,
-            workout.exercises.find((ex) => ex.name === exerciseProps.name)!
-              .series,
+            exerciseProps.series,
           );
           this.updateSeries(
             workout.exercises.find((ex) => ex.name === exerciseProps.name)!,
-            workout.exercises.find((ex) => ex.name === exerciseProps.name)!
-              .series,
+            exerciseProps.series,
           );
+          workout.updateExercises();
         } else {
           workout.addExercise(exerciseProps);
         }
@@ -116,6 +121,7 @@ export namespace EditWorkoutUseCase {
           exercise.series
             .find((item) => item.position === serieProps.position)!
             .updateProps(serieProps);
+          exercise.updateSeries();
         } else {
           exercise.addSerie(serieProps);
         }
