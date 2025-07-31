@@ -12,7 +12,6 @@ export type WorkoutDocument = {
   sport: EWorkoutSports;
   exercises: {
     refId: string;
-    name: string;
     series: {
       position: number;
       weight: number;

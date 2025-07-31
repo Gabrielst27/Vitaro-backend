@@ -9,9 +9,10 @@ export type WorkoutOutput = {
   goal: EWorkoutGoals;
   sport: EWorkoutSports;
   exercises: {
+    id: string;
     refId: string;
-    name: string;
     series: {
+      id: string;
       weight: number;
       reps: number;
       restInSeconds?: number;
@@ -23,17 +24,14 @@ export type WorkoutOutput = {
 
 export class WorkoutOutputMapper {
   static toOutput(entity: WorkoutEntity): WorkoutOutput {
-    return {
-      id: entity.id,
-      ...entity.props,
-      exercises: entity.props.exercises.map((exercise) => {
+    const exercisesProps: WorkoutOutput['exercises'] = entity.exercises.map(
+      (exercise) => {
         return {
-          ...exercise,
-          series: exercise.series.map((serie) => {
-            return serie;
-          }),
+          ...exercise.toJSON(),
+          series: exercise.series.map((serie) => serie.toJSON()),
         };
-      }),
-    };
+      },
+    );
+    return { ...entity.toJSON(), exercises: exercisesProps };
   }
 }

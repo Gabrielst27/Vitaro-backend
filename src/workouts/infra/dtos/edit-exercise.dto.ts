@@ -4,26 +4,25 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumberString,
-  IsString,
+  IsUUID,
   Length,
   ValidateNested,
 } from 'class-validator';
-import { InputSerieDto } from './input-serie.dto';
+import { EditSerieDto } from './edit-serie.dto';
 
-export class InputExerciseDto {
+export class EditExerciseDto {
+  @IsUUID()
+  @IsNotEmpty()
+  id: string;
+
   @IsNumberString()
   @Length(4, 4)
   @IsNotEmpty()
   refId: string;
 
-  @IsString()
-  @Length(2, 64)
-  @IsNotEmpty()
-  name: string;
-
   @IsArray()
   @ArrayMinSize(0)
   @ValidateNested()
-  @Type(() => InputSerieDto)
-  series: InputSerieDto[];
+  @Type(() => EditSerieDto)
+  series: EditSerieDto[];
 }

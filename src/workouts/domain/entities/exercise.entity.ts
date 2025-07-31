@@ -5,7 +5,6 @@ import { SerieEntity, SerieProps } from './serie.entity';
 
 export type ExerciseProps = {
   refId: string;
-  name: string;
   series: SerieProps[];
 };
 
@@ -19,10 +18,6 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
 
   public get refId(): string {
     return this.props.refId;
-  }
-
-  public get name(): string {
-    return this.props.name;
   }
 
   public get series(): SerieEntity[] {

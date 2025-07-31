@@ -15,19 +15,13 @@ export class ExerciseRules {
   @IsNotEmpty()
   refId: string;
 
-  @IsString()
-  @Length(2, 64)
-  @IsNotEmpty()
-  name: string;
-
   @IsArray()
   @ArrayMinSize(0)
   series: SerieProps[];
 
-  constructor({ refId, name, series }: ExerciseProps) {
+  constructor({ refId, series }: ExerciseProps) {
     Object.assign(this, {
       refId,
-      name,
       series,
     });
   }

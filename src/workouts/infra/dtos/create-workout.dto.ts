@@ -10,9 +10,9 @@ import {
 import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { Type } from 'class-transformer';
-import { InputExerciseDto } from './input-exercise.dto';
+import { CreateExerciseDto } from './create-exercise.dto';
 
-export class InputWorkoutDto {
+export class CreateWorkoutDto {
   @IsString()
   @Length(4, 32)
   @IsNotEmpty()
@@ -29,6 +29,6 @@ export class InputWorkoutDto {
   @IsArray()
   @ArrayMinSize(0)
   @ValidateNested()
-  @Type(() => InputExerciseDto)
-  exercises: InputExerciseDto[];
+  @Type(() => CreateExerciseDto)
+  exercises: CreateExerciseDto[];
 }
