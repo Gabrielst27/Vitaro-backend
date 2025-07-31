@@ -2,6 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { BadRequestExceptionFilter } from './shared/infra/exception-filters/bad-request-exception.filter';
 import { UnauthorizedExceptionFilter } from './shared/infra/exception-filters/unauthorized-exception.filter';
 import { ConflictExceptionFilter } from './shared/infra/exception-filters/conflict-exception.filter';
+import { NotFoundExceptionFilter } from './shared/infra/exception-filters/not-found-exception.filter';
 
 export function applyGlobalConfig(app: INestApplication) {
   app.useGlobalPipes(
@@ -15,5 +16,6 @@ export function applyGlobalConfig(app: INestApplication) {
     new BadRequestExceptionFilter(),
     new UnauthorizedExceptionFilter(),
     new ConflictExceptionFilter(),
+    new NotFoundExceptionFilter(),
   );
 }
