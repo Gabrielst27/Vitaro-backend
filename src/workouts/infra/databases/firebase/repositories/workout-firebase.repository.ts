@@ -1,6 +1,5 @@
 import { ConflictException } from '@nestjs/common';
 import { SearchParams } from '../../../../../shared/domain/repositories/search-params.repository';
-import { FirebaseService } from '../../../../../shared/infra/database/firebase/firebase.service';
 import { ExerciseEntity } from '../../../../domain/entities/exercise.entity';
 import { SerieEntity } from '../../../../domain/entities/serie.entity';
 import { WorkoutEntity } from '../../../../domain/entities/workout.entity';
@@ -14,6 +13,7 @@ import { SearchResult } from '../../../../../shared/domain/repositories/search-r
 import { BadRequestError } from '../../../../../shared/application/errors/bad-request.error';
 import { NotFoundError } from '../../../../../shared/application/errors/not-found.error';
 import { ErrorCodes } from '../../../../../shared/domain/enums/error-codes.enum';
+import { FirebaseService } from '../../../../../shared/infra/firebase/firebase.service';
 
 export class WorkoutFirebaseRepository
   implements IWorkoutRepository.Repository

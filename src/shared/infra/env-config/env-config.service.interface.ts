@@ -3,7 +3,8 @@ export interface IEnvConfigService {
   getEnv(): string;
   getFirebaseCredentialPath(): string;
   getFirebaseApiKey(): string;
-  getGoogleApiIdentityToolkit(): string;
   getJwTSecret(): string;
   getJwtExpiresInSecond(): number;
+  getSupabaseUrl(): string;
+  getSupabaseApiKey(): string;
 }

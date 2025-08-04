@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { WorkoutsController } from './workouts.controller';
-import { FirebaseModule } from '../../shared/infra/database/firebase/firebase.module';
 import { WorkoutFirebaseRepository } from './databases/firebase/repositories/workout-firebase.repository';
-import { FirebaseService } from '../../shared/infra/database/firebase/firebase.service';
 import { CreateWorkoutUseCase } from '../application/usecases/create-workout.usecase';
 import { IWorkoutRepository } from '../domain/repositories/workout.repository.interface';
 import { AuthModule } from '../../auth/infra/auth.module';
 import { ListUserWorkoutsUseCase } from '../application/usecases/list-user-workouts.usecase';
 import { EditWorkoutUseCase } from '../application/usecases/edit-workout.usecase';
+import { FirebaseService } from '../../shared/infra/firebase/firebase.service';
+import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
 
 @Module({
   imports: [FirebaseModule, AuthModule],

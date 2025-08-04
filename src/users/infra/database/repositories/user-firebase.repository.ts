@@ -1,6 +1,5 @@
 import { ConflictException } from '@nestjs/common';
 import { SearchParams } from '../../../../shared/domain/repositories/search-params.repository';
-import { FirebaseService } from '../../../../shared/infra/database/firebase/firebase.service';
 import { UserEntity } from '../../../domain/entities/user-entity';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
 import { EFirebaseOperators } from '../../../../shared/domain/enums/firebase-operators.enum';
@@ -10,6 +9,7 @@ import {
 } from '../mappers/user-document.mapper';
 import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
 import { NotFoundError } from '../../../../shared/application/errors/not-found.error';
+import { FirebaseService } from '../../../../shared/infra/firebase/firebase.service';
 
 export class UserFirebaseRepository implements IUserRepository.Repository {
   sortableFields: string[] = [

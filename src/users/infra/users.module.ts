@@ -7,12 +7,12 @@ import {
   AUTH_SERVICE,
   IAuthService,
 } from '../../auth/application/auth.service.interface';
-import { FirebaseModule } from '../../shared/infra/database/firebase/firebase.module';
-import { FirebaseService } from '../../shared/infra/database/firebase/firebase.service';
 import { UserFirebaseRepository } from './database/repositories/user-firebase.repository';
 import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
 import { FindCurrentUserUseCase } from '../application/usecases/find-current-user.usecase';
 import { EditUserUseCase } from '../application/usecases/edit-user.usecase';
+import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
+import { FirebaseService } from '../../shared/infra/firebase/firebase.service';
 
 @Module({
   imports: [AuthModule, FirebaseModule],

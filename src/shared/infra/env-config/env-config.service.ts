@@ -6,6 +6,14 @@ import { ConfigService } from '@nestjs/config';
 export class EnvConfigService implements IEnvConfigService {
   constructor(private configService: ConfigService) {}
 
+  getSupabaseUrl(): string {
+    return this.configService.get<string>('SUPABASE_URL') ?? '';
+  }
+
+  getSupabaseApiKey(): string {
+    return this.configService.get<string>('SUPABASE_API_KEY') ?? '';
+  }
+
   getPort(): number {
     return Number(this.configService.get<number>('PORT'));
   }
@@ -24,12 +32,6 @@ export class EnvConfigService implements IEnvConfigService {
   getFirebaseApiKey(): string {
     const key = this.configService.get<string>('FIREBASE_API_KEY') ?? '';
     return key;
-  }
-
-  getGoogleApiIdentityToolkit(): string {
-    const url =
-      this.configService.get<string>('GOOGLE_API_IDENTITY_TOOLKIT') ?? '';
-    return url;
   }
 
   getJwTSecret(): string {
