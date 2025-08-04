@@ -17,10 +17,8 @@ export namespace EditWorkoutUseCase {
     goal: EWorkoutGoals;
     sport: EWorkoutSports;
     exercises: {
-      id: string;
       refId: string;
       series: {
-        id: string;
         position: number;
         weight: number;
         reps: number;
@@ -61,7 +59,7 @@ export namespace EditWorkoutUseCase {
     ) {
       for (const exerciseEntity of workout.exercises) {
         const itemProps = exercises.find(
-          (item) => item.id === exerciseEntity.id,
+          (item) => item.refId === exerciseEntity.refId,
         );
         if (!itemProps) {
           workout.removeExercise(exerciseEntity.id);
@@ -75,18 +73,18 @@ export namespace EditWorkoutUseCase {
     ): void {
       for (const exerciseProps of exercises) {
         const exerciseEntity = workout.exercises.find(
-          (ex) => ex.id === exerciseProps.id,
+          (ex) => ex.refId === exerciseProps.refId,
         );
         if (exerciseEntity) {
           workout.exercises
-            .find((ex) => ex.id === exerciseProps.id)!
+            .find((ex) => ex.refId === exerciseProps.refId)!
             .updateProps(exerciseProps);
           this.removeSeries(
-            workout.exercises.find((ex) => ex.id === exerciseProps.id)!,
+            workout.exercises.find((ex) => ex.refId === exerciseProps.refId)!,
             exerciseProps.series,
           );
           this.updateSeries(
-            workout.exercises.find((ex) => ex.id === exerciseProps.id)!,
+            workout.exercises.find((ex) => ex.refId === exerciseProps.refId)!,
             exerciseProps.series,
           );
           workout.updateExercises();

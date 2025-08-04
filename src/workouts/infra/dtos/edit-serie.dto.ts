@@ -4,15 +4,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   Length,
 } from 'class-validator';
 
 export class EditSerieDto {
-  @IsUUID()
-  @IsNotEmpty()
-  id: string;
-
   @IsInt()
   @IsNotEmpty()
   position: number;
