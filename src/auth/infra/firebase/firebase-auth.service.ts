@@ -33,10 +33,13 @@ export class FirebaseAuthService implements IAuthService {
     }
   }
 
-  async signInFirebase(token: string): Promise<string> {
+  async signIn(token: string): Promise<{ id: string; token: string }> {
     try {
       const decodedToken = await this.verifyToken(token);
-      return decodedToken.user_id;
+      return {
+        id: decodedToken.user_id,
+        token: decodedToken,
+      };
     } catch (error) {
       if (error.response.status >= 400 && error.response.status <= 500) {
         throw new UnauthorizedException(ErrorCodes.INVALID_CREDENTIALS);

@@ -8,6 +8,6 @@ export interface IAuthService {
     user: UserEntity,
     password: string,
   ): Promise<AuthenticatedUserOutput>;
-  signInFirebase(token: string): Promise<string>;
+  signIn(email, password): Promise<{ id: string; token: string }>;
   verifyToken(token: string): Promise<any>;
 }

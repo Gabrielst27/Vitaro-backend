@@ -1,8 +1,12 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { UserSignInWithIdTokenUsecase } from '../../application/usecases/user-sign-in-with-id-token.usecase';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { UserSignIn } from '../../application/usecases/user-sign-in';
 
-export class UserSignInDto implements UserSignInWithIdTokenUsecase.Input {
+export class UserSignInDto implements UserSignIn.Input {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
   @IsString()
   @IsNotEmpty()
-  idToken: string;
+  password: string;
 }

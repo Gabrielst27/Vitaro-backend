@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserSignUpUsecase } from '../application/usecases/user-sign-up.usecase';
 import { UserSignUpDto } from './dtos/user-sign-up.dto';
-import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
+import { UserSignIn } from '../application/usecases/user-sign-in';
 import { UserSignInDto } from './dtos/user-sign-in.dto';
 import { AuthGuard } from '../../auth/infra/auth.guard';
 import { CurrentUser } from '../../shared/infra/decorators/current-user/current-user.decorator';
@@ -21,8 +21,8 @@ export class UsersController {
   @Inject(UserSignUpUsecase.UseCase)
   private signUpUseCase: UserSignUpUsecase.UseCase;
 
-  @Inject(UserSignInWithIdTokenUsecase.UseCase)
-  private signInUseCase: UserSignInWithIdTokenUsecase.UseCase;
+  @Inject(UserSignIn.UseCase)
+  private signInUseCase: UserSignIn.UseCase;
 
   @Inject(FindCurrentUserUseCase.UseCase)
   private findCurrentUserUseCase: FindCurrentUserUseCase.UseCase;

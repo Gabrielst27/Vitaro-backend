@@ -8,7 +8,7 @@ import {
   IAuthService,
 } from '../../auth/application/auth.service.interface';
 import { UserFirebaseRepository } from './database/repositories/user-firebase.repository';
-import { UserSignInWithIdTokenUsecase } from '../application/usecases/user-sign-in-with-id-token.usecase';
+import { UserSignIn } from '../application/usecases/user-sign-in';
 import { FindCurrentUserUseCase } from '../application/usecases/find-current-user.usecase';
 import { EditUserUseCase } from '../application/usecases/edit-user.usecase';
 import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
@@ -45,15 +45,12 @@ import { SupabaseService } from '../../shared/infra/supabase/supabase.service';
       inject: ['UserRepository', AUTH_SERVICE],
     },
     {
-      provide: UserSignInWithIdTokenUsecase.UseCase,
+      provide: UserSignIn.UseCase,
       useFactory: (
         userRepository: IUserRepository.Repository,
         authService: IAuthService,
       ) => {
-        return new UserSignInWithIdTokenUsecase.UseCase(
-          userRepository,
-          authService,
-        );
+        return new UserSignIn.UseCase(userRepository, authService);
       },
       inject: ['UserRepository', AUTH_SERVICE],
     },

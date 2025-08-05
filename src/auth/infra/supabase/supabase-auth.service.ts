@@ -45,7 +45,7 @@ export class SupabaseAuthService implements IAuthService {
     }
   }
 
-  signInFirebase(token: string): Promise<string> {
+  signIn(token: string): Promise<{ id: string; token: string }> {
     throw new Error('Method not implemented.');
   }
   verifyToken(token: string): Promise<any> {
