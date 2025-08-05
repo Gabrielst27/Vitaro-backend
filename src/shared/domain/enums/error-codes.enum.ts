@@ -3,6 +3,7 @@ export enum ErrorCodes {
   INVALID_TOKEN = 'invalid-token',
   INVALID_CREDENTIALS = 'invalid-credentials',
   USER_NOT_AUTHENTICATED = 'user-not-authenticated',
+  USER_NOT_CREATED = 'user-not-created',
   FORBIDDEN = 'forbidden',
   USER_NOT_FOUND = 'user-not-found',
   EMAIL_ALREADY_EXISTS = 'email-already-exists',
@@ -10,4 +11,7 @@ export enum ErrorCodes {
   ID_NOT_PROVIDED = 'id-not-provided',
   INPUT_NOT_PROVIDED = 'input-not-provided',
   INVALID_QUERY = 'invalid-query',
+  INVALID_ENTITY = 'invalid-entity',
+  INSUFFICIENT_PRIVILEGE = 'insufficient-privilege',
+  NOT_NULL_VIOLATION = 'not-null-violation',
 }

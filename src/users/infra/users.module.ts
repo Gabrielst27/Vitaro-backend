@@ -13,16 +13,26 @@ import { FindCurrentUserUseCase } from '../application/usecases/find-current-use
 import { EditUserUseCase } from '../application/usecases/edit-user.usecase';
 import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
 import { FirebaseService } from '../../shared/infra/firebase/firebase.service';
+import { SupabaseModule } from '../../shared/infra/supabase/supabase.module';
+import { UserSupabaseRepository } from './database/repositories/user-supabase.repository';
+import { SupabaseService } from '../../shared/infra/supabase/supabase.service';
 
 @Module({
-  imports: [AuthModule, FirebaseModule],
+  imports: [AuthModule, FirebaseModule, SupabaseModule],
   providers: [
     {
-      provide: 'UserRepository',
+      provide: '',
       useFactory: (firebaseService: FirebaseService) => {
         return new UserFirebaseRepository(firebaseService);
       },
       inject: [FirebaseService],
+    },
+    {
+      provide: 'UserRepository',
+      useFactory: (supabaseService: SupabaseService) => {
+        return new UserSupabaseRepository(supabaseService);
+      },
+      inject: [SupabaseService],
     },
     {
       provide: UserSignUpUsecase.UseCase,

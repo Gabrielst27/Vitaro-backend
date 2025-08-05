@@ -38,6 +38,7 @@ export namespace UserSignUpUsecase {
         role: ERole.COMMON,
       });
       const authUser = await this.authService.createUser(entity, password);
+      entity.updateId(authUser.id);
       entity.props.isActive = true;
       await this.userRepository.insert(entity);
       return AuthenticatedUserOutputMapper.toOutput(entity, authUser.token);

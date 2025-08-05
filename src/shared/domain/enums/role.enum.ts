@@ -3,5 +3,5 @@ export enum ERole {
   PROFESSIONAL = 'professional',
   PLUS = 'plus',
   VIP = 'vip',
-  ADM = 'adm',
+  GOD = 'god',
 }

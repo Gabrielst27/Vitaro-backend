@@ -17,7 +17,14 @@ export type AuthenticatedUserOutput = {
 };
 
 export class AuthenticatedUserOutputMapper {
-  static toOutput(entity: UserEntity, token: string): AuthenticatedUserOutput {
+  static toOutput(
+    entity: UserEntity,
+    token: string,
+    id?: string,
+  ): AuthenticatedUserOutput {
+    if (id) {
+      entity.updateId(id);
+    }
     const entityJson = entity.toJSON();
     return { ...entityJson, token };
   }

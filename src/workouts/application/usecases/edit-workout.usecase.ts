@@ -62,7 +62,7 @@ export namespace EditWorkoutUseCase {
           (item) => item.refId === exerciseEntity.refId,
         );
         if (!itemProps) {
-          workout.removeExercise(exerciseEntity.id);
+          workout.removeExercise(exerciseEntity.refId);
         }
       }
     }
@@ -103,7 +103,7 @@ export namespace EditWorkoutUseCase {
           (item) => item.position === serieEntity.position,
         );
         if (!itemProps) {
-          exercise.removeSerie(serieEntity.id);
+          exercise.removeSerie(serieEntity.position);
         }
       }
     }

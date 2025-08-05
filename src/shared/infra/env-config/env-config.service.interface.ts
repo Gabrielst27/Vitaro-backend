@@ -7,4 +7,5 @@ export interface IEnvConfigService {
   getJwtExpiresInSecond(): number;
   getSupabaseUrl(): string;
   getSupabaseApiKey(): string;
+  getSupabaseRoleKey(): string;
 }

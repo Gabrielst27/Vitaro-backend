@@ -4,11 +4,7 @@ import { SupabaseModule } from './supabase/supabase.module';
 import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
-  imports: [
-    EnvConfigModule.forRoot(),
-    FirebaseModule,
-    SupabaseModule.forRoot(),
-  ],
+  imports: [EnvConfigModule.forRoot(), FirebaseModule, SupabaseModule],
   exports: [FirebaseModule, SupabaseModule],
 })
 export class SharedModule {}

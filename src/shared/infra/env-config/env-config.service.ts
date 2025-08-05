@@ -14,6 +14,10 @@ export class EnvConfigService implements IEnvConfigService {
     return this.configService.get<string>('SUPABASE_API_KEY') ?? '';
   }
 
+  getSupabaseRoleKey(): string {
+    return this.configService.get<string>('SUPABASE_ROLE_KEY') ?? '';
+  }
+
   getPort(): number {
     return Number(this.configService.get<number>('PORT'));
   }

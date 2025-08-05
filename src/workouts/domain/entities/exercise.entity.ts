@@ -38,9 +38,9 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
     this.updateSeries();
   }
 
-  removeSerie(serieId: string) {
+  removeSerie(position: number) {
     const newSeries: SerieEntity[] = this._series.filter(
-      (item) => item.id !== serieId,
+      (item) => item.position !== position,
     );
     this._series = newSeries;
     this.updateSeries();

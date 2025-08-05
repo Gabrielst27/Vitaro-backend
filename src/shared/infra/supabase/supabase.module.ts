@@ -1,24 +1,19 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { SupabaseModule as DefaultSupabaseModule } from 'nestjs-supabase-js';
-import { EnvConfigModule } from '../env-config/env-config.module';
+import { Module } from '@nestjs/common';
 import { EnvConfigService } from '../env-config/env-config.service';
+import { SupabaseService } from './supabase.service';
+import { EnvConfigModule } from '../env-config/env-config.module';
 
-@Module({})
-export class SupabaseModule {
-  static forRoot(): DynamicModule {
-    return {
-      module: SupabaseModule,
-      imports: [
-        EnvConfigModule.forRoot(),
-        DefaultSupabaseModule.forRootAsync({
-          imports: [EnvConfigModule.forRoot()],
-          inject: [EnvConfigService],
-          useFactory: (envConfigService: EnvConfigService) => ({
-            supabaseUrl: envConfigService.getSupabaseUrl(),
-            supabaseKey: envConfigService.getSupabaseApiKey(),
-          }),
-        }),
-      ],
-    };
-  }
-}
+@Module({
+  imports: [EnvConfigModule.forRoot()],
+  providers: [
+    {
+      provide: SupabaseService,
+      useFactory: (config: EnvConfigService) => {
+        return new SupabaseService(config);
+      },
+      inject: [EnvConfigService],
+    },
+  ],
+  exports: [SupabaseService],
+})
+export class SupabaseModule {}

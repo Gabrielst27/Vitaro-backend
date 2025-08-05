@@ -42,7 +42,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
   async insert(entity: UserEntity): Promise<void> {
     const firestore = await this.firebaseService.getFirestoreDb();
     const document = UserDocumentMapper.toDocument(entity);
-    await firestore.collection(this.collection).doc(entity.id).set(document);
+    await firestore.collection(this.collection).add(document);
   }
 
   async findById(id: string): Promise<UserEntity> {
@@ -58,6 +58,9 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
   async update(entity: UserEntity): Promise<void> {
     const firestore = await this.firebaseService.getFirestoreDb();
     const document = UserDocumentMapper.toDocument(entity);
+    if (!entity.id) {
+      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
+    }
     try {
       await firestore
         .collection(this.collection)

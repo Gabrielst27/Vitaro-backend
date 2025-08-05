@@ -15,7 +15,6 @@ export class FirebaseAuthService implements IAuthService {
   ): Promise<AuthenticatedUserOutput> {
     try {
       const authUser = await getAuth().createUser({
-        uid: user.id,
         email: user.email,
         password: password,
         displayName: user.name,
@@ -23,7 +22,7 @@ export class FirebaseAuthService implements IAuthService {
       if (!authUser) {
         throw new Error('Firebase signUp failed');
       }
-      const customToken = await getAuth().createCustomToken(user.id);
+      const customToken = await getAuth().createCustomToken(authUser.uid);
       const userOutput = AuthenticatedUserOutputMapper.toOutput(
         user,
         customToken,

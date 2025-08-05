@@ -143,10 +143,7 @@ export class WorkoutFirebaseRepository
   async insert(entity: WorkoutEntity): Promise<void> {
     const firestore = await this.firebaseService.getFirestoreDb();
     const workoutDocument = WorkoutDocumentMapper.toDocument(entity);
-    const workoutDocRef = await firestore
-      .collection(this.collection)
-      .doc(entity.id);
-    await workoutDocRef.set(workoutDocument);
+    await firestore.collection(this.collection).add(workoutDocument);
   }
 
   async findById(id: string): Promise<WorkoutEntity> {
@@ -160,6 +157,9 @@ export class WorkoutFirebaseRepository
   }
 
   async update(entity: WorkoutEntity): Promise<void> {
+    if (!entity.id) {
+      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
+    }
     const document = WorkoutDocumentMapper.toDocument(entity);
     const firestore = await this.firebaseService.getFirestoreDb();
     await firestore.collection(this.collection).doc(entity.id).set(document);
