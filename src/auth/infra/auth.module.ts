@@ -5,9 +5,10 @@ import { AUTH_SERVICE } from '../application/auth.service.interface';
 import { SupabaseAuthService } from './supabase/supabase-auth.service';
 import { SupabaseModule } from '../../shared/infra/supabase/supabase.module';
 import { SupabaseService } from '../../shared/infra/supabase/supabase.service';
+import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
 
 @Module({
-  imports: [EnvConfigModule, SupabaseModule],
+  imports: [EnvConfigModule, SupabaseModule, FirebaseModule],
   providers: [
     {
       provide: AUTH_SERVICE,

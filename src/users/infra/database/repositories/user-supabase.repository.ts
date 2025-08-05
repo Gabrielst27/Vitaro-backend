@@ -2,9 +2,10 @@ import { SearchParams } from '../../../../shared/domain/repositories/search-para
 import { UserEntity } from '../../../domain/entities/user-entity';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
 import { SupabaseService } from '../../../../shared/infra/supabase/supabase.service';
-import { UserTableMapper } from '../mappers/user-table.mapper';
+import { UserTable, UserTableMapper } from '../mappers/user-table.mapper';
 import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
 import { ConflictError } from '../../../../shared/infra/erros/conflict.error';
+import { NotFoundError } from '../../../../shared/application/errors/not-found.error';
 
 export class UserSupabaseRepository implements IUserRepository.Repository {
   sortableFields: string[];
@@ -56,8 +57,15 @@ export class UserSupabaseRepository implements IUserRepository.Repository {
     }
   }
 
-  findById(id: string): Promise<UserEntity> {
-    throw new Error('Method not implemented.');
+  async findById(id: string): Promise<UserEntity> {
+    const result = await this.supabaseService.client
+      .from(this.table)
+      .select('*')
+      .eq('id', id);
+    if (result.error || !result.data) {
+      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
+    }
+    return UserTableMapper.toEntity(result.data[0] as UserTable);
   }
   update(entity: UserEntity): Promise<void> {
     throw new Error('Method not implemented.');

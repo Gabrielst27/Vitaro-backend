@@ -6,10 +6,9 @@ import { UserOutput, UserOutputMapper } from '../outputs/user.output';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
 import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
-export namespace UserSignIn {
+export namespace UserSignInWithToken {
   export type Input = {
-    email: string;
-    password: string;
+    token: string;
   };
 
   export type Output = UserOutput;
@@ -21,13 +20,10 @@ export namespace UserSignIn {
     ) {}
 
     async execute(input: Input): Promise<UserOutput> {
-      if (!input.email || !input.password) {
+      if (!input.token) {
         throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
-      const credentials = await this.authService.signInWithEmail(
-        input.email,
-        input.password,
-      );
+      const credentials = await this.authService.signInWithToken(input.token);
       const entity = await this.userRepository.findById(credentials.id);
       return AuthenticatedUserOutputMapper.toOutput(entity, credentials.token);
     }

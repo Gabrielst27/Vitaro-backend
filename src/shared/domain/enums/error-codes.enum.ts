@@ -5,6 +5,7 @@ export enum ErrorCodes {
   USER_NOT_AUTHENTICATED = 'user-not-authenticated',
   USER_NOT_CREATED = 'user-not-created',
   FORBIDDEN = 'forbidden',
+  USER_BANNED = 'user-banned',
   USER_NOT_FOUND = 'user-not-found',
   EMAIL_ALREADY_EXISTS = 'email-already-exists',
   WORKOUT_NOT_FOUND = 'workout-not-found',
@@ -14,4 +15,5 @@ export enum ErrorCodes {
   INVALID_ENTITY = 'invalid-entity',
   INSUFFICIENT_PRIVILEGE = 'insufficient-privilege',
   NOT_NULL_VIOLATION = 'not-null-violation',
+  UNKNOWN_AUTH_ERROR = 'unknown-auth-error',
 }

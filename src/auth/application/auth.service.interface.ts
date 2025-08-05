@@ -8,6 +8,7 @@ export interface IAuthService {
     user: UserEntity,
     password: string,
   ): Promise<AuthenticatedUserOutput>;
-  signIn(email, password): Promise<{ id: string; token: string }>;
+  signInWithToken(token): Promise<{ id: string; token: string }>;
+  signInWithEmail(email, password): Promise<{ id: string; token: string }>;
   verifyToken(token: string): Promise<any>;
 }

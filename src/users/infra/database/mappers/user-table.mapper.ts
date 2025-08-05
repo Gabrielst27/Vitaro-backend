@@ -26,7 +26,7 @@ export class UserTableMapper {
     return {
       id: props.id,
       name: props.name,
-      email: props.name,
+      email: props.email,
       age: props.age,
       weight: props.weight,
       height: props.height,
@@ -36,5 +36,21 @@ export class UserTableMapper {
       updated_at: props.updatedAt,
       disabled_at: props.disabledAt,
     };
+  }
+
+  static toEntity(model: UserTable): UserEntity {
+    const props = {
+      name: model.name,
+      email: model.email,
+      age: model.age ?? undefined,
+      weight: model.weight ?? undefined,
+      height: model.height ?? undefined,
+      isActive: model.is_active,
+      role: model.role,
+      createdAt: new Date(model.created_at),
+      updatedAt: new Date(model.updated_at),
+      disabledAt: model.disabled_at ? new Date(model.disabled_at) : undefined,
+    };
+    return new UserEntity(props, model.id);
   }
 }

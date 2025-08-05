@@ -7,6 +7,7 @@ import {
 import { UserEntity } from '../../../users/domain/entities/user-entity';
 import { UnauthorizedException } from '@nestjs/common';
 import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 
 export class FirebaseAuthService implements IAuthService {
   async createUser(
@@ -26,6 +27,7 @@ export class FirebaseAuthService implements IAuthService {
       const userOutput = AuthenticatedUserOutputMapper.toOutput(
         user,
         customToken,
+        authUser.uid,
       );
       return userOutput;
     } catch {
@@ -33,7 +35,15 @@ export class FirebaseAuthService implements IAuthService {
     }
   }
 
-  async signIn(token: string): Promise<{ id: string; token: string }> {
+  signInWithEmail(
+    email: any,
+    password: any,
+  ): Promise<{ id: string; token: string }> {
+    throw new UnauthorizedError(ErrorCodes.FORBIDDEN);
+  }
+
+  async signInWithToken(token: string): Promise<{ id: string; token: string }> {
+    const auth = getAuth();
     try {
       const decodedToken = await this.verifyToken(token);
       return {

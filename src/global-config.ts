@@ -3,6 +3,7 @@ import { BadRequestExceptionFilter } from './shared/infra/exception-filters/bad-
 import { UnauthorizedExceptionFilter } from './shared/infra/exception-filters/unauthorized-exception.filter';
 import { ConflictExceptionFilter } from './shared/infra/exception-filters/conflict-exception.filter';
 import { NotFoundExceptionFilter } from './shared/infra/exception-filters/not-found-exception.filter';
+import { ForbiddenExceptionFilter } from './shared/infra/exception-filters/forbidden-exception.filter';
 
 export function applyGlobalConfig(app: INestApplication) {
   app.useGlobalPipes(
@@ -17,5 +18,6 @@ export function applyGlobalConfig(app: INestApplication) {
     new UnauthorizedExceptionFilter(),
     new ConflictExceptionFilter(),
     new NotFoundExceptionFilter(),
+    new ForbiddenExceptionFilter(),
   );
 }

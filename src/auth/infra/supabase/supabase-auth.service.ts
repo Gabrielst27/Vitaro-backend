@@ -8,6 +8,7 @@ import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 import { SupabaseService } from '../../../shared/infra/supabase/supabase.service';
 import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 import { ConflictError } from '../../../shared/infra/erros/conflict.error';
+import { ForbiddenError } from '../../../shared/application/errors/forbidden.error';
 
 export class SupabaseAuthService implements IAuthService {
   constructor(private service: SupabaseService) {}
@@ -45,9 +46,37 @@ export class SupabaseAuthService implements IAuthService {
     }
   }
 
-  signIn(token: string): Promise<{ id: string; token: string }> {
-    throw new Error('Method not implemented.');
+  signInWithToken(token: any): Promise<{ id: string; token: string }> {
+    throw new ForbiddenError(ErrorCodes.FORBIDDEN);
   }
+
+  async signInWithEmail(
+    email: string,
+    password: string,
+  ): Promise<{ id: string; token: string }> {
+    const credentials = await this.service.client.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (credentials.error) {
+      if (
+        credentials.error.code === 'user_not_found' ||
+        credentials.error.code === 'invalid_credentials' ||
+        credentials.error.code === 'email_address_invalid'
+      ) {
+        throw new UnauthorizedError(ErrorCodes.INVALID_CREDENTIALS);
+      } else if (credentials.error.code === 'user_banned') {
+        throw new UnauthorizedError(ErrorCodes.USER_BANNED);
+      } else {
+        throw new Error(ErrorCodes.UNKNOWN_AUTH_ERROR);
+      }
+    }
+    return {
+      id: credentials.data.user.id,
+      token: credentials.data.session.access_token,
+    };
+  }
+
   verifyToken(token: string): Promise<any> {
     throw new Error('Method not implemented.');
   }
