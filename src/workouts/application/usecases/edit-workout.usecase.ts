@@ -20,11 +20,11 @@ export namespace EditWorkoutUseCase {
       refId: string;
       series: {
         position: number;
-        weight: number;
+        weight?: number;
         reps: number;
         restInSeconds: number;
-        technique: string;
-        accessory: string;
+        techniqueId?: string;
+        accessory?: string;
       }[];
     }[];
   };

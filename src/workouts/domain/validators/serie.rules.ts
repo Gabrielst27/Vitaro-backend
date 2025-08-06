@@ -14,8 +14,8 @@ export class SerieRules {
   position: number;
 
   @IsNumber()
-  @IsNotEmpty()
-  weight: number;
+  @IsOptional()
+  weight?: number;
 
   @IsInt()
   @IsNotEmpty()
@@ -28,7 +28,7 @@ export class SerieRules {
   @IsString()
   @Length(0, 32)
   @IsOptional()
-  technique?: string;
+  techniqueId?: string;
 
   @IsString()
   @Length(0, 32)
@@ -40,7 +40,7 @@ export class SerieRules {
     weight,
     reps,
     restInSeconds,
-    technique,
+    techniqueId: technique,
     accessory,
   }: SerieProps) {
     Object.assign(this, {

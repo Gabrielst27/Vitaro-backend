@@ -1,6 +1,4 @@
 import { Timestamp } from 'firebase-admin/firestore';
-import { ExerciseProps } from '../../../../domain/entities/exercise.entity';
-import { SerieProps } from '../../../../domain/entities/serie.entity';
 import { WorkoutEntity } from '../../../../domain/entities/workout.entity';
 import { EWorkoutGoals } from '../../../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../../../domain/enums/workout-sports.enum';
@@ -14,11 +12,11 @@ export type WorkoutDocument = {
     refId: string;
     series: {
       position: number;
-      weight: number;
+      weight: number | null;
       reps: number;
       restInSeconds: number;
-      technique: string;
-      accessory: string;
+      techniqueId: string | null;
+      accessory: string | null;
     }[];
   }[];
   createdAt: Date;

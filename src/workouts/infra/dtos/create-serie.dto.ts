@@ -13,7 +13,7 @@ export class CreateSerieDto {
   position: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   weight: number;
 
   @IsInt()
@@ -21,13 +21,13 @@ export class CreateSerieDto {
   reps: number;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   restInSeconds: number;
 
   @IsString()
   @Length(0, 32)
   @IsOptional()
-  technique: string;
+  techniqueId: string;
 
   @IsString()
   @Length(0, 32)

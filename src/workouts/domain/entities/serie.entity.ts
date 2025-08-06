@@ -4,27 +4,31 @@ import { SerieValidatorFactory } from '../validators/serie.validator';
 
 export type SerieProps = {
   position: number;
-  weight: number;
   reps: number;
   restInSeconds?: number;
-  technique?: string;
-  accessory?: string;
+  weight?: number | null;
+  techniqueId?: string | null;
+  accessory?: string | null;
 };
 
 export class SerieEntity extends Entity<SerieProps> {
   constructor(props: SerieProps, id?: string) {
     SerieEntity.validate(props);
     const restInSeconds = props.restInSeconds || 90;
-    const technique = props.technique ?? '';
-    const accessory = props.accessory ?? '';
-    super({ ...props, restInSeconds, technique, accessory }, id);
+    const weight = props.weight ?? null;
+    const technique = props.techniqueId ?? null;
+    const accessory = props.accessory ?? null;
+    super(
+      { ...props, restInSeconds, weight, techniqueId: technique, accessory },
+      id,
+    );
   }
 
   get position(): number {
     return this.props.position;
   }
 
-  get weight(): number {
+  get weight(): number | null {
     return this.props.weight;
   }
 
@@ -36,11 +40,11 @@ export class SerieEntity extends Entity<SerieProps> {
     return this.props.restInSeconds;
   }
 
-  get technique(): string {
-    return this.props.technique;
+  get technique(): string | null {
+    return this.props.techniqueId;
   }
 
-  get accessory(): string {
+  get accessory(): string | null {
     return this.props.accessory;
   }
 

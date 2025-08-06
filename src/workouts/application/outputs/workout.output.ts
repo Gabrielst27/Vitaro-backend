@@ -13,11 +13,11 @@ export type WorkoutOutput = {
     refId: string;
     series: {
       id: string;
-      weight: number;
+      weight: number | null;
       reps: number;
-      restInSeconds?: number;
-      technique?: string;
-      accessory?: string;
+      restInSeconds: number;
+      techniqueId: string | null;
+      accessory: string | null;
     }[];
   }[];
 };

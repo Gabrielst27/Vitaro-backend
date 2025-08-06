@@ -13,7 +13,7 @@ export class EditSerieDto {
   position: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   weight: number;
 
   @IsInt()
@@ -27,7 +27,7 @@ export class EditSerieDto {
   @IsString()
   @Length(0, 32)
   @IsOptional()
-  technique: string;
+  techniqueId: string;
 
   @IsString()
   @Length(0, 32)
