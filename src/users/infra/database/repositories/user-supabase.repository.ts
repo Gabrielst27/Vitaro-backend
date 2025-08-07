@@ -24,16 +24,6 @@ export class UserSupabaseRepository implements IUserRepository.Repository {
     throw new Error('Method not implemented.');
   }
 
-  async emailExists(email: string): Promise<void> {
-    const result = await this.supabaseService.client
-      .from(this.table)
-      .select('*')
-      .eq('email', email);
-    if (result.data && result.data.length > 0) {
-      throw new ConflictError(ErrorCodes.EMAIL_ALREADY_EXISTS);
-    }
-  }
-
   disable(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
@@ -71,10 +61,8 @@ export class UserSupabaseRepository implements IUserRepository.Repository {
   async findByToken(token: string): Promise<UserEntity> {
     const authUser = await this.supabaseService.getAuthenticatedClient(token);
     const user = await authUser.auth.getUser();
-    if (user.error) {
-      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
-    }
-    const id = user.data.user.id;
+    if (user.error) this.supabaseService.verifyUserError(user.error);
+    const id = user.data.user!.id;
     return await this.findById(id);
   }
 

@@ -7,7 +7,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
   Length,
   Matches,
 } from 'class-validator';

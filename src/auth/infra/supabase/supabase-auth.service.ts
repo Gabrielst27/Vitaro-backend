@@ -9,6 +9,8 @@ import { SupabaseService } from '../../../shared/infra/supabase/supabase.service
 import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 import { ConflictError } from '../../../shared/application/errors/conflict.error';
 import { ForbiddenError } from '../../../shared/application/errors/forbidden.error';
+import { ApplicationError } from '../../../shared/application/errors/application.error';
+import { DomainError } from '../../../shared/domain/errors/domain.error';
 
 export class SupabaseAuthService implements IAuthService {
   constructor(private service: SupabaseService) {}
@@ -42,6 +44,9 @@ export class SupabaseAuthService implements IAuthService {
         credentials.data.user.id,
       );
     } catch (error) {
+      if (error instanceof ApplicationError || error instanceof DomainError) {
+        throw error;
+      }
       throw new Error(error.message);
     }
   }

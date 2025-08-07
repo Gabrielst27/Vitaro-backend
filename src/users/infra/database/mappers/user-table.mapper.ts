@@ -1,7 +1,7 @@
 import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
 import { ERole } from '../../../../shared/domain/enums/role.enum';
 import { ValidationError } from '../../../../shared/domain/errors/validation.error';
-import { UserEntity } from '../../../domain/entities/user-entity';
+import { UserEntity, UserProps } from '../../../domain/entities/user-entity';
 
 export type UserTable = {
   id: string;
@@ -39,18 +39,18 @@ export class UserTableMapper {
   }
 
   static toEntity(model: UserTable): UserEntity {
-    const props = {
-      name: model.name,
-      email: model.email,
+    const { is_active, created_at, updated_at, disabled_at, ...cleanProps } =
+      model;
+    const props: UserProps = {
+      ...cleanProps,
       age: model.age ?? undefined,
       weight: model.weight ?? undefined,
       height: model.height ?? undefined,
       isActive: model.is_active,
-      role: model.role,
       createdAt: new Date(model.created_at),
       updatedAt: new Date(model.updated_at),
       disabledAt: model.disabled_at ? new Date(model.disabled_at) : undefined,
     };
-    return new UserEntity(props, model.id);
+    return new UserEntity(props);
   }
 }

@@ -9,8 +9,8 @@ import { EditWorkoutUseCase } from '../application/usecases/edit-workout.usecase
 import { FirebaseService } from '../../shared/infra/firebase/firebase.service';
 import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
 import { SupabaseService } from '../../shared/infra/supabase/supabase.service';
-import { WorkoutSupabaseRepository } from './databases/firebase/repositories/workout-supabase.repository';
 import { SupabaseModule } from '../../shared/infra/supabase/supabase.module';
+import { WorkoutSupabaseRepository } from './databases/supabase/repositories/workout-supabase.repository';
 
 @Module({
   imports: [FirebaseModule, AuthModule, SupabaseModule],

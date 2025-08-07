@@ -28,7 +28,7 @@ export class SupabaseService {
     );
   }
 
-  verifiyUserError(error): void {
+  verifyUserError(error): void {
     if (error.code === 'bad_jwt') {
       throw new UnauthorizedError(ErrorCodes.INVALID_TOKEN);
     }
@@ -44,7 +44,9 @@ export class SupabaseService {
       case '23503':
         throw new ValidationError(ErrorCodes.FOREIGN_KEY_VIOLATION);
       default:
-        throw new ValidationError(ErrorCodes.UNKNOWN_RLS_ERROR);
+        throw new ValidationError(
+          ErrorCodes.UNKNOWN_RLS_ERROR + ' - ' + error.message,
+        );
     }
   }
 }

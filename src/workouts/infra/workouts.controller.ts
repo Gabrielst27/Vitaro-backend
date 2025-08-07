@@ -42,8 +42,12 @@ export class WorkoutsController {
   async listUserWorkouts(
     @Param('id') userId: string,
     @Query() searchParams: SearchParamsDto,
+    @Token() token,
   ) {
-    return this.listUserWorkoutsUseCase.execute({ ...searchParams, userId });
+    return this.listUserWorkoutsUseCase.execute(
+      { ...searchParams, userId },
+      token,
+    );
   }
 
   @Put('edit-workout')

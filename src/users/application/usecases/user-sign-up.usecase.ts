@@ -26,18 +26,11 @@ export namespace UserSignUpUsecase {
       private authService: IAuthService,
     ) {}
 
-    async execute(
-      input: Input,
-      token?: string,
-    ): Promise<AuthenticatedUserOutput> {
-      if (!token) {
-        throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
-      }
+    async execute(input: Input): Promise<AuthenticatedUserOutput> {
       const { name, email, password } = input;
       if (!name || !email || !password) {
         throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
-      await this.userRepository.emailExists(email);
       const entity = new UserEntity({
         name,
         email,
@@ -45,6 +38,7 @@ export namespace UserSignUpUsecase {
         role: ERole.COMMON,
       });
       const authUser = await this.authService.createUser(entity, password);
+      await this.userRepository.setToken(authUser.token);
       entity.updateId(authUser.id);
       entity.props.isActive = true;
       await this.userRepository.insert(entity);

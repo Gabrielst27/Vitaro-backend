@@ -7,7 +7,6 @@ export type SearchResultProps<E extends Entity> = {
   perPage: number;
   sort?: string | null;
   sortDir?: string | null;
-  query: any;
 };
 
 export class SearchResult<E extends Entity> {
@@ -18,7 +17,6 @@ export class SearchResult<E extends Entity> {
   readonly lastPage: number;
   readonly sort?: string | null;
   readonly sortDir?: string | null;
-  readonly query: any;
 
   constructor(props: SearchResultProps<E>) {
     this.items = props.items;
@@ -28,6 +26,5 @@ export class SearchResult<E extends Entity> {
     this.lastPage = Math.floor(this.total / this.perPage);
     this.sort = props.sort ?? null;
     this.sortDir = props.sortDir ?? null;
-    this.query = props.query ?? '';
   }
 }

@@ -8,12 +8,12 @@ import {
   WorkoutDocument,
   WorkoutDocumentMapper,
 } from '../mappers/workout-document.mapper';
-import { EFirebaseOperators } from '../../../../../shared/domain/enums/firebase-operators.enum';
 import { SearchResult } from '../../../../../shared/domain/repositories/search-result.repository';
 import { BadRequestError } from '../../../../../shared/application/errors/bad-request.error';
 import { NotFoundError } from '../../../../../shared/application/errors/not-found.error';
 import { ErrorCodes } from '../../../../../shared/domain/enums/error-codes.enum';
 import { FirebaseService } from '../../../../../shared/infra/firebase/firebase.service';
+import { EOperators } from '../../../../../shared/domain/enums/firebase-operators.enum';
 
 export class WorkoutFirebaseRepository
   implements IWorkoutRepository.Repository
@@ -48,7 +48,7 @@ export class WorkoutFirebaseRepository
     const firestore = await this.firebaseService.getFirestoreDb();
     const snapshot = await firestore
       .collection(this.collection)
-      .where('title', EFirebaseOperators.EQUALS, title)
+      .where('title', EOperators.EQUALS, title)
       .get();
     if (!snapshot.empty) {
       throw new ConflictException(
@@ -140,7 +140,6 @@ export class WorkoutFirebaseRepository
       perPage: perPage,
       sort: sortBy,
       sortDir: sortDirection,
-      query,
     });
   }
 

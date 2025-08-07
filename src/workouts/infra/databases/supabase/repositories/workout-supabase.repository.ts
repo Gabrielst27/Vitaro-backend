@@ -1,4 +1,3 @@
-import { PostgrestError } from '@supabase/supabase-js';
 import { ForbiddenError } from '../../../../../shared/application/errors/forbidden.error';
 import { UnauthorizedError } from '../../../../../shared/application/errors/unauthorized.error';
 import { ErrorCodes } from '../../../../../shared/domain/enums/error-codes.enum';
@@ -8,22 +7,26 @@ import { ExerciseEntity } from '../../../../domain/entities/exercise.entity';
 import { SerieEntity } from '../../../../domain/entities/serie.entity';
 import { WorkoutEntity } from '../../../../domain/entities/workout.entity';
 import { IWorkoutRepository } from '../../../../domain/repositories/workout.repository.interface';
+import { ApplicationError } from '../../../../../shared/application/errors/application.error';
+import { DomainError } from '../../../../../shared/domain/errors/domain.error';
+import { ConflictError } from '../../../../../shared/application/errors/conflict.error';
 import {
   ExerciseTableMapper,
   SerieTable,
   SerieTableMapper,
   WorkoutTableMapper,
 } from '../mappers/workout-table.mapper';
-import { ApplicationError } from '../../../../../shared/application/errors/application.error';
-import { DomainError } from '../../../../../shared/domain/errors/domain.error';
-import { ConflictError } from '../../../../../shared/application/errors/conflict.error';
+import { ValidationError } from '../../../../../shared/domain/errors/validation.error';
+import { EOperators } from '../../../../../shared/domain/enums/firebase-operators.enum';
+import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import { SearchResult } from '../../../../../shared/domain/repositories/search-result.repository';
 
 export class WorkoutSupabaseRepository
   implements IWorkoutRepository.Repository
 {
-  sortableFields: string[];
-  searchableFields: string[];
-  insensitiveFields: string[];
+  sortableFields: string[] = ['title', 'created_at', 'updated_at'];
+  searchableFields: string[] = ['author_id', 'title', 'goal', 'sport'];
+  insensitiveFields: string[] = ['title', 'goal', 'sport'];
   token?: string;
   table: string = 'workouts';
   exercisesTable: string = 'exercises';
@@ -91,23 +94,91 @@ export class WorkoutSupabaseRepository
     throw new Error('Method not implemented.');
   }
 
-  search(params: SearchParams): Promise<IWorkoutRepository.SearchOutput> {
-    throw new Error('Method not implemented.');
+  async search(params: SearchParams): Promise<IWorkoutRepository.SearchOutput> {
+    if (!this.token)
+      throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
+    const client = await this.supabaseService.getAuthenticatedClient(
+      this.token,
+    );
+    let queries = client.from(this.table).select(`
+        *, 
+          exercises (
+            *,
+            series (*)
+          )
+      `);
+    if (params.queries)
+      params.queries.map((query) => {
+        if (!this.searchableFields.includes(query.field))
+          throw new ValidationError(ErrorCodes.INVALID_QUERY);
+        switch (query.comparisonOperator) {
+          case EOperators.EQUALS:
+            queries = queries.eq(query.field, query.filter);
+            break;
+          case EOperators.DIFF:
+            PostgrestFilterBuilder;
+            queries = queries.neq(query.field, query.filter);
+            break;
+          case EOperators.LESSER:
+            queries = queries.lt(query.field, query.filter);
+            break;
+          case EOperators.LESSEQUAL:
+            queries = queries.lte(query.field, query.filter);
+            break;
+          case EOperators.GREATER:
+            queries = queries.gt(query.field, query.filter);
+            break;
+          case EOperators.GREATEQUAL:
+        }
+      });
+    const sortField = params.sortField
+      ? this.sortableFields.includes(params.sortField)
+        ? params.sortField
+        : 'title'
+      : 'title';
+    const sortDirection = params.sortDirection ?? 'desc';
+    queries.order(sortField, { ascending: sortDirection === 'asc' });
+    const perPage = params.perPage && params.perPage >= 1 ? params.perPage : 20;
+    const page = params.page && params.page >= 0 ? params.page : 0;
+    const start = page * perPage;
+    const end = page + perPage - 1;
+    queries.range(start, end);
+    const result = await queries;
+    const items = result.data
+      ? result.data.map((item) => WorkoutTableMapper.toEntity(item))
+      : [];
+    return new SearchResult({
+      items,
+      total: items.length,
+      currentPage: page,
+      perPage,
+      sort: sortField,
+      sortDir: sortDirection,
+    });
   }
 
   async insert(entity: WorkoutEntity): Promise<void> {
     if (!this.token)
       throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
     const model = WorkoutTableMapper.toTable(entity);
-    try {
-      const client = await this.supabaseService.getAuthenticatedClient(
-        this.token,
+    const client = await this.supabaseService.getAuthenticatedClient(
+      this.token,
+    );
+    const user = await client.auth.getUser();
+    if (user.error) this.supabaseService.verifyUserError(user.error);
+    if (user.data.user!.id !== entity.authorId) {
+      throw new ForbiddenError(ErrorCodes.FORBIDDEN);
+    }
+    const seriesModels: SerieTable[] = [];
+    const exercisesModels = entity.exercises.map((exercise) => {
+      seriesModels.push(
+        ...exercise.series.map((serie) =>
+          SerieTableMapper.toTable(serie, exercise.id!),
+        ),
       );
-      const user = await client.auth.getUser();
-      if (user.error) this.supabaseService.verifiyUserError(user.error);
-      if (user.data.user!.id !== entity.authorId) {
-        throw new ForbiddenError(ErrorCodes.FORBIDDEN);
-      }
+      return ExerciseTableMapper.toTable(exercise, entity.id!);
+    });
+    try {
       const workoutResult = await client.from(this.table).insert([model]);
       if (workoutResult.error)
         this.supabaseService.verifyOperationError(workoutResult.error);
@@ -115,16 +186,7 @@ export class WorkoutSupabaseRepository
         .from(this.userWorkoutsTable)
         .insert([{ user_id: entity.authorId, workout_id: entity.id }]);
       if (userWorkoutsResult.error)
-        this.supabaseService.verifiyUserError(userWorkoutsResult.error);
-      const seriesModels: SerieTable[] = [];
-      const exercisesModels = entity.exercises.map((exercise) => {
-        seriesModels.push(
-          ...exercise.series.map((serie) =>
-            SerieTableMapper.toTable(serie, exercise.id!),
-          ),
-        );
-        return ExerciseTableMapper.toTable(exercise, entity.id!);
-      });
+        this.supabaseService.verifyOperationError(userWorkoutsResult.error);
       const exercisesResult = await client
         .from(this.exercisesTable)
         .insert([...exercisesModels]);
@@ -136,6 +198,7 @@ export class WorkoutSupabaseRepository
       if (seriesResult.error)
         this.supabaseService.verifyOperationError(seriesResult.error);
     } catch (error) {
+      await client.from(this.table).delete().eq('id', entity.id);
       if (error instanceof ApplicationError || error instanceof DomainError) {
         throw error;
       }

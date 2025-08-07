@@ -1,21 +1,18 @@
 import { ErrorCodes } from '../enums/error-codes.enum';
-import { EFirebaseOperators } from '../enums/firebase-operators.enum';
-import {
-  EntityValidationError,
-  ValidationError,
-} from '../errors/validation.error';
+import { EOperators } from '../enums/firebase-operators.enum';
+import { ValidationError } from '../errors/validation.error';
 
 export type SortDirection = 'asc' | 'desc';
 
 export type QueryProps = {
   field: string;
-  comparisonOperator: EFirebaseOperators;
+  comparisonOperator: EOperators;
   filter: string;
 };
 
 export class CustomQuery {
   readonly field: string;
-  readonly comparisonOperator: EFirebaseOperators;
+  readonly comparisonOperator: EOperators;
   readonly filter: string;
 
   constructor(props: QueryProps) {

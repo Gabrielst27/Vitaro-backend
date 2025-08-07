@@ -3,6 +3,7 @@ import { ERole } from '../../../../shared/domain/enums/role.enum';
 import { UserEntity } from '../../../domain/entities/user-entity';
 
 export type UserDocument = {
+  id: string;
   name: string;
   email: string;
   age: number;
@@ -30,10 +31,14 @@ export class UserDocumentMapper {
     );
     const height: number = Number(props.height);
     const weight: number = Number(props.height);
-    return new UserEntity(
-      { ...props, createdAt, updatedAt, disabledAt, height, weight },
-      id,
-    );
+    return new UserEntity({
+      ...props,
+      createdAt,
+      updatedAt,
+      disabledAt,
+      height,
+      weight,
+    });
   }
 
   private static convertDate(value: any): Date | undefined {

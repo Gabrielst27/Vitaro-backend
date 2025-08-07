@@ -5,7 +5,6 @@ import {
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { IWorkoutRepository } from '../../domain/repositories/workout.repository.interface';
 import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
-import { EFirebaseOperators } from '../../../shared/domain/enums/firebase-operators.enum';
 import {
   CustomQuery,
   QueryProps,
@@ -14,6 +13,8 @@ import {
 } from '../../../shared/domain/repositories/search-params.repository';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
 import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
+import { EOperators } from '../../../shared/domain/enums/firebase-operators.enum';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 
 export namespace ListUserWorkoutsUseCase {
   export type Input = SearchProps & { userId: string };
@@ -22,13 +23,17 @@ export namespace ListUserWorkoutsUseCase {
   export class UseCase implements IUsecase<Input, Output> {
     constructor(private workoutRepository: IWorkoutRepository.Repository) {}
 
-    async execute(input: Input): Promise<Output> {
+    async execute(input: Input, token?: string): Promise<Output> {
+      if (!token) {
+        throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
+      }
       if (!input.userId) {
         throw new BadRequestError(ErrorCodes.ID_NOT_PROVIDED);
       }
+      this.workoutRepository.setToken(token);
       const query: QueryProps = {
-        field: 'authorId',
-        comparisonOperator: EFirebaseOperators.EQUALS,
+        field: 'author_id',
+        comparisonOperator: EOperators.EQUALS,
         filter: input.userId,
       };
       const queries: CustomQuery[] = [new CustomQuery(query)];

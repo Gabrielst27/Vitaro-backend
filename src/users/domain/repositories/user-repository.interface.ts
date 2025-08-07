@@ -11,7 +11,6 @@ export namespace IUserRepository {
     extends ISearchableRepository<UserEntity, SearchInput, SearchOutput> {
     findByToken(token: string): Promise<UserEntity>;
     findByEmail(email: string): Promise<UserEntity>;
-    emailExists(email: string): Promise<void>;
     disable(id: string): Promise<void>;
   }
 }

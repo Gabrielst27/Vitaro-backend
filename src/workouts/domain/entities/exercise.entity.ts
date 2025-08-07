@@ -5,17 +5,22 @@ import { ExerciseValidatorFactory } from '../validators/exercise.validator';
 import { SerieEntity, SerieProps } from './serie.entity';
 
 export type ExerciseProps = {
+  id?: string;
   refId: string;
   series: SerieProps[];
 };
 
 export class ExerciseEntity extends Entity<ExerciseProps> {
   private _series: SerieEntity[] = [];
-  constructor(props: ExerciseProps, id?: string) {
+  constructor(props: ExerciseProps) {
     ExerciseEntity.validate(props);
-    id = id ?? v4();
-    super(props, id);
+    const id = props.id ?? v4();
+    super({ ...props, id });
     this.initializeSeries(props.series);
+  }
+
+  public get id(): string {
+    return this.props.id;
   }
 
   public get refId(): string {

@@ -2,7 +2,6 @@ import { ConflictException } from '@nestjs/common';
 import { SearchParams } from '../../../../shared/domain/repositories/search-params.repository';
 import { UserEntity } from '../../../domain/entities/user-entity';
 import { IUserRepository } from '../../../domain/repositories/user-repository.interface';
-import { EFirebaseOperators } from '../../../../shared/domain/enums/firebase-operators.enum';
 import {
   UserDocument,
   UserDocumentMapper,
@@ -10,6 +9,7 @@ import {
 import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
 import { NotFoundError } from '../../../../shared/application/errors/not-found.error';
 import { FirebaseService } from '../../../../shared/infra/firebase/firebase.service';
+import { EOperators } from '../../../../shared/domain/enums/firebase-operators.enum';
 
 export class UserFirebaseRepository implements IUserRepository.Repository {
   sortableFields: string[] = [
@@ -90,7 +90,7 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
     const firestore = await this.firebaseService.getFirestoreDb();
     const snapshot = await firestore
       .collection(this.collection)
-      .where('email', EFirebaseOperators.EQUALS, email)
+      .where('email', EOperators.EQUALS, email)
       .limit(1)
       .get();
     if (snapshot.docs.length > 0) {

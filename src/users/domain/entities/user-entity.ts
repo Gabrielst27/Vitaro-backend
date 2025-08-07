@@ -4,6 +4,7 @@ import { ERole } from '../../../shared/domain/enums/role.enum';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 
 export type UserProps = {
+  id?: string;
   name: string;
   email: string;
   age?: number;
@@ -17,26 +18,29 @@ export type UserProps = {
 };
 
 export class UserEntity extends Entity<UserProps> {
-  constructor(props: UserProps, id?: string) {
+  constructor(props: UserProps) {
     UserEntity.validate(props);
     const age = props.age ?? 0;
     const height = props.height ?? 0;
+    const id = props.id ?? '';
     const weight = props.weight ?? 0;
     const createdAt = props.createdAt ?? new Date();
     const updatedAt = props.updatedAt ?? new Date();
     const disabledAt = props.disabledAt ?? null;
-    super(
-      {
-        ...props,
-        age,
-        height,
-        weight,
-        createdAt,
-        updatedAt,
-        disabledAt,
-      },
+    super({
+      ...props,
       id,
-    );
+      age,
+      height,
+      weight,
+      createdAt,
+      updatedAt,
+      disabledAt,
+    });
+  }
+
+  public get id(): string {
+    return this.props.id;
   }
 
   public get name(): string {
@@ -85,6 +89,10 @@ export class UserEntity extends Entity<UserProps> {
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
     }
+  }
+
+  updateId(id: string) {
+    this.props.id = id;
   }
 
   updateProps(props: UserProps): void {

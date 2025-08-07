@@ -7,6 +7,7 @@ import { WorkoutValidatorFactory } from '../validators/workout.validator';
 import { ExerciseEntity, ExerciseProps } from './exercise.entity';
 
 export type WorkoutProps = {
+  id?: string;
   authorId: string;
   title: string;
   goal: EWorkoutGoals;
@@ -18,13 +19,17 @@ export type WorkoutProps = {
 
 export class WorkoutEntity extends Entity<WorkoutProps> {
   private _exercises: ExerciseEntity[] = [];
-  constructor(props: WorkoutProps, id?: string) {
+  constructor(props: WorkoutProps) {
     WorkoutEntity.validate(props);
-    id = id ?? v4();
+    const id = props.id ?? v4();
     const createdAt: Date = props.createdAt ?? new Date();
     const updatedAt: Date = props.updatedAt ?? new Date();
-    super({ ...props, createdAt, updatedAt }, id);
+    super({ ...props, id, createdAt, updatedAt });
     this.initializeExercises(props.exercises);
+  }
+
+  public get id(): string {
+    return this.props.id;
   }
 
   public get authorId() {

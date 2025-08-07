@@ -4,6 +4,7 @@ import { EntityValidationError } from '../../../shared/domain/errors/validation.
 import { SerieValidatorFactory } from '../validators/serie.validator';
 
 export type SerieProps = {
+  id?: string;
   position: number;
   reps: number;
   restInSeconds?: number;
@@ -13,17 +14,25 @@ export type SerieProps = {
 };
 
 export class SerieEntity extends Entity<SerieProps> {
-  constructor(props: SerieProps, id?: string) {
+  constructor(props: SerieProps) {
     SerieEntity.validate(props);
-    id = id ?? v4();
+    const id = props.id ?? v4();
     const restInSeconds = props.restInSeconds || 90;
     const weight = props.weight ?? null;
     const technique = props.techniqueId ?? null;
     const accessory = props.accessory ?? null;
-    super(
-      { ...props, restInSeconds, weight, techniqueId: technique, accessory },
+    super({
+      ...props,
       id,
-    );
+      restInSeconds,
+      weight,
+      techniqueId: technique,
+      accessory,
+    });
+  }
+
+  get id(): string {
+    return this.props.id;
   }
 
   get position(): number {

@@ -4,6 +4,7 @@ import { EWorkoutGoals } from '../../../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../../../domain/enums/workout-sports.enum';
 
 export type WorkoutDocument = {
+  id: string;
   authorId: string;
   title: string;
   goal: EWorkoutGoals;
@@ -47,7 +48,7 @@ export class WorkoutDocumentMapper {
       WorkoutDocumentMapper.convertDate(document.createdAt) || new Date();
     const updatedAt: Date =
       WorkoutDocumentMapper.convertDate(document.updatedAt) || new Date();
-    return new WorkoutEntity({ ...document, createdAt, updatedAt }, id);
+    return new WorkoutEntity({ ...document, createdAt, updatedAt });
   }
 
   private static convertDate(value: any): Date | undefined {
