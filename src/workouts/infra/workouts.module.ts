@@ -8,17 +8,27 @@ import { ListUserWorkoutsUseCase } from '../application/usecases/list-user-worko
 import { EditWorkoutUseCase } from '../application/usecases/edit-workout.usecase';
 import { FirebaseService } from '../../shared/infra/firebase/firebase.service';
 import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
+import { SupabaseService } from '../../shared/infra/supabase/supabase.service';
+import { WorkoutSupabaseRepository } from './databases/firebase/repositories/workout-supabase.repository';
+import { SupabaseModule } from '../../shared/infra/supabase/supabase.module';
 
 @Module({
-  imports: [FirebaseModule, AuthModule],
+  imports: [FirebaseModule, AuthModule, SupabaseModule],
   controllers: [WorkoutsController],
   providers: [
     {
-      provide: 'WorkoutRepository',
+      provide: '',
       useFactory: (firebaseService: FirebaseService) => {
         return new WorkoutFirebaseRepository(firebaseService);
       },
       inject: [FirebaseService],
+    },
+    {
+      provide: 'WorkoutRepository',
+      useFactory: (supabaseService: SupabaseService) => {
+        return new WorkoutSupabaseRepository(supabaseService);
+      },
+      inject: [SupabaseService],
     },
     {
       provide: CreateWorkoutUseCase.UseCase,

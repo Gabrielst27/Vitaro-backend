@@ -31,9 +31,13 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
     'disabledAt',
   ];
   insensitiveFields: string[] = ['name', 'email'];
+  token?: string;
   collection: string = 'users';
 
   constructor(private firebaseService: FirebaseService) {}
+  setToken(token: string): void {
+    this.token = token;
+  }
 
   search(params: SearchParams): Promise<IUserRepository.SearchOutput> {
     throw new Error('Method not implemented.');
@@ -53,6 +57,10 @@ export class UserFirebaseRepository implements IUserRepository.Repository {
       throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
     }
     return UserDocumentMapper.toEntity(data as UserDocument, id);
+  }
+
+  async findByToken(token: string): Promise<UserEntity> {
+    throw new Error('Method not implemented');
   }
 
   async update(entity: UserEntity): Promise<void> {

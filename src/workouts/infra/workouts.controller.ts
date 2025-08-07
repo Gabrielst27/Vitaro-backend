@@ -12,11 +12,11 @@ import {
 import { CreateWorkoutUseCase } from '../application/usecases/create-workout.usecase';
 import { CreateWorkoutDto } from './dtos/create-workout.dto';
 import { AuthGuard } from '../../auth/infra/auth.guard';
-import { CurrentUser } from '../../shared/infra/decorators/current-user/current-user.decorator';
 import { ListUserWorkoutsUseCase } from '../application/usecases/list-user-workouts.usecase';
 import { SearchParamsDto } from '../../shared/infra/dtos/search-params.dto';
 import { EditWorkoutUseCase } from '../application/usecases/edit-workout.usecase';
 import { EditWorkoutDto } from './dtos/edit-workout.dto';
+import { Token } from '../../shared/infra/decorators/token/token.decorator';
 
 @Controller('workouts')
 @UseGuards(AuthGuard)
@@ -33,9 +33,9 @@ export class WorkoutsController {
   @Post('create-workout')
   async createWorkout(
     @Body() createWorkoutDto: CreateWorkoutDto,
-    @CurrentUser() userId: string,
+    @Token() token,
   ) {
-    return this.createWorkoutUseCase.execute(createWorkoutDto, userId);
+    return this.createWorkoutUseCase.execute(createWorkoutDto, token);
   }
 
   @Get('users/:id/user-workouts')
@@ -48,9 +48,9 @@ export class WorkoutsController {
 
   @Put('edit-workout')
   async editWorkout(
-    @CurrentUser() userId: string,
+    @Token() token: string,
     @Body() editWorkoutDto: EditWorkoutDto,
   ) {
-    return this.editWorkoutUseCase.execute(editWorkoutDto, userId);
+    return this.editWorkoutUseCase.execute(editWorkoutDto, token);
   }
 }

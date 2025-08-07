@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 import { EWorkoutGoals } from '../enums/workout-goals.enum';
@@ -19,6 +20,7 @@ export class WorkoutEntity extends Entity<WorkoutProps> {
   private _exercises: ExerciseEntity[] = [];
   constructor(props: WorkoutProps, id?: string) {
     WorkoutEntity.validate(props);
+    id = id ?? v4();
     const createdAt: Date = props.createdAt ?? new Date();
     const updatedAt: Date = props.updatedAt ?? new Date();
     super({ ...props, createdAt, updatedAt }, id);

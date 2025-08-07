@@ -9,6 +9,7 @@ import {
 } from '../outputs/authenticated-user.output';
 import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
 import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 
 export namespace UserSignUpUsecase {
   export type Input = {
@@ -25,7 +26,13 @@ export namespace UserSignUpUsecase {
       private authService: IAuthService,
     ) {}
 
-    async execute(input: Input): Promise<AuthenticatedUserOutput> {
+    async execute(
+      input: Input,
+      token?: string,
+    ): Promise<AuthenticatedUserOutput> {
+      if (!token) {
+        throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
+      }
       const { name, email, password } = input;
       if (!name || !email || !password) {
         throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);

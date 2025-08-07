@@ -34,11 +34,15 @@ export class WorkoutFirebaseRepository
     'updatedAt',
   ];
   insensitiveFields: string[] = ['title', 'goal', 'sport'];
+  token?: string;
   collection: string = 'workouts';
   exercisesArray: string = 'exercises';
   seriesArray: string = 'series';
 
   constructor(private firebaseService: FirebaseService) {}
+  setToken(token: string): void {
+    this.token = token;
+  }
 
   async titleExists(title: string): Promise<void> {
     const firestore = await this.firebaseService.getFirestoreDb();

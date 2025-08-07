@@ -12,6 +12,7 @@ import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export namespace CreateWorkoutUseCase {
   export type Input = {
+    authorId: string;
     title: string;
     goal: EWorkoutGoals;
     sport: EWorkoutSports;
@@ -31,14 +32,15 @@ export namespace CreateWorkoutUseCase {
   export class UseCase implements IUsecase<Input, Output> {
     constructor(private workoutRepository: IWorkoutRepository.Repository) {}
 
-    async execute(input: Input, authorId?: string): Promise<WorkoutOutput> {
-      if (!authorId) {
+    async execute(input: Input, token?: string): Promise<WorkoutOutput> {
+      if (!token) {
         throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
       }
-      const { title, goal, sport, exercises } = input;
-      if (!title || !goal || !sport || !exercises) {
+      const { authorId, title, goal, sport, exercises } = input;
+      if (!authorId || !title || !goal || !sport || !exercises) {
         throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
+      this.workoutRepository.setToken(token);
       await this.workoutRepository.titleExists(title);
       const exercisesProps: ExerciseProps[] = [];
       for (const exercise of exercises) {
@@ -56,7 +58,6 @@ export namespace CreateWorkoutUseCase {
       }
       const entity = new WorkoutEntity({
         ...input,
-        authorId,
         exercises: exercisesProps,
       });
       await this.workoutRepository.insert(entity);

@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 import { SerieValidatorFactory } from '../validators/serie.validator';
@@ -14,6 +15,7 @@ export type SerieProps = {
 export class SerieEntity extends Entity<SerieProps> {
   constructor(props: SerieProps, id?: string) {
     SerieEntity.validate(props);
+    id = id ?? v4();
     const restInSeconds = props.restInSeconds || 90;
     const weight = props.weight ?? null;
     const technique = props.techniqueId ?? null;

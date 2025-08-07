@@ -12,9 +12,9 @@ import { UserSignUpDto } from './dtos/user-sign-up.dto';
 import { UserSignIn } from '../application/usecases/user-sign-in';
 import { UserSignInDto } from './dtos/user-sign-in.dto';
 import { AuthGuard } from '../../auth/infra/auth.guard';
-import { CurrentUser } from '../../shared/infra/decorators/current-user/current-user.decorator';
 import { FindCurrentUserUseCase } from '../application/usecases/find-current-user.usecase';
 import { EditUserUseCase } from '../application/usecases/edit-user.usecase';
+import { Token } from '../../shared/infra/decorators/token/token.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -42,13 +42,13 @@ export class UsersController {
 
   @Get('find-current-user')
   @UseGuards(AuthGuard)
-  async findCurrentUser(@CurrentUser() userId: string) {
-    return await this.findCurrentUserUseCase.execute({}, userId);
+  async findCurrentUser(@Token() token: string) {
+    return await this.findCurrentUserUseCase.execute({}, token);
   }
 
   @Put('edit')
   @UseGuards(AuthGuard)
-  async editUser(@Body() editUserDto: any, @CurrentUser() userId: string) {
-    return await this.editUserUseCase.execute(editUserDto, userId);
+  async editUser(@Body() editUserDto: any, @Token() token: string) {
+    return await this.editUserUseCase.execute(editUserDto, token);
   }
 }

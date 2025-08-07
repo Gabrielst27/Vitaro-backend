@@ -4,16 +4,21 @@ import { IUserRepository } from '../../../domain/repositories/user-repository.in
 import { SupabaseService } from '../../../../shared/infra/supabase/supabase.service';
 import { UserTable, UserTableMapper } from '../mappers/user-table.mapper';
 import { ErrorCodes } from '../../../../shared/domain/enums/error-codes.enum';
-import { ConflictError } from '../../../../shared/infra/erros/conflict.error';
+import { ConflictError } from '../../../../shared/application/errors/conflict.error';
 import { NotFoundError } from '../../../../shared/application/errors/not-found.error';
+import { UnauthorizedError } from '../../../../shared/application/errors/unauthorized.error';
 
 export class UserSupabaseRepository implements IUserRepository.Repository {
   sortableFields: string[];
   searchableFields: string[];
   insensitiveFields: string[];
+  token?: string;
   table: string = 'users';
 
   constructor(private supabaseService: SupabaseService) {}
+  setToken(token: string): void {
+    this.token = token;
+  }
 
   findByEmail(email: string): Promise<UserEntity> {
     throw new Error('Method not implemented.');
@@ -24,7 +29,7 @@ export class UserSupabaseRepository implements IUserRepository.Repository {
       .from(this.table)
       .select('*')
       .eq('email', email);
-    if (result.data) {
+    if (result.data && result.data.length > 0) {
       throw new ConflictError(ErrorCodes.EMAIL_ALREADY_EXISTS);
     }
   }
@@ -37,20 +42,15 @@ export class UserSupabaseRepository implements IUserRepository.Repository {
   }
 
   async insert(entity: UserEntity): Promise<void> {
+    if (!this.token)
+      throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
     const authenticatedClient =
-      await this.supabaseService.getAuthenticatedClient();
+      await this.supabaseService.getAuthenticatedClient(this.token);
     const model = UserTableMapper.toTable(entity);
     try {
       const insert = await authenticatedClient.from(this.table).insert([model]);
       if (insert.error) {
-        switch (insert.error.code) {
-          case '42501':
-            throw Error(ErrorCodes.INSUFFICIENT_PRIVILEGE);
-          case '23502':
-            throw Error(ErrorCodes.NOT_NULL_VIOLATION);
-          default:
-            throw Error();
-        }
+        this.supabaseService.verifyOperationError(insert.error);
       }
     } catch (error) {
       throw new Error('ERR-0002');
@@ -67,6 +67,17 @@ export class UserSupabaseRepository implements IUserRepository.Repository {
     }
     return UserTableMapper.toEntity(result.data[0] as UserTable);
   }
+
+  async findByToken(token: string): Promise<UserEntity> {
+    const authUser = await this.supabaseService.getAuthenticatedClient(token);
+    const user = await authUser.auth.getUser();
+    if (user.error) {
+      throw new NotFoundError(ErrorCodes.USER_NOT_FOUND);
+    }
+    const id = user.data.user.id;
+    return await this.findById(id);
+  }
+
   update(entity: UserEntity): Promise<void> {
     throw new Error('Method not implemented.');
   }

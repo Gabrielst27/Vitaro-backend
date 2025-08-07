@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 import { ExerciseValidatorFactory } from '../validators/exercise.validator';
@@ -12,6 +13,7 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
   private _series: SerieEntity[] = [];
   constructor(props: ExerciseProps, id?: string) {
     ExerciseEntity.validate(props);
+    id = id ?? v4();
     super(props, id);
     this.initializeSeries(props.series);
   }

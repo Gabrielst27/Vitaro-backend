@@ -7,7 +7,7 @@ import { IAuthService } from '../../application/auth.service.interface';
 import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 import { SupabaseService } from '../../../shared/infra/supabase/supabase.service';
 import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
-import { ConflictError } from '../../../shared/infra/erros/conflict.error';
+import { ConflictError } from '../../../shared/application/errors/conflict.error';
 import { ForbiddenError } from '../../../shared/application/errors/forbidden.error';
 
 export class SupabaseAuthService implements IAuthService {
@@ -77,7 +77,8 @@ export class SupabaseAuthService implements IAuthService {
     };
   }
 
-  verifyToken(token: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  async verifyToken(token: string): Promise<any> {
+    await this.service.getAuthenticatedClient(token);
+    return token;
   }
 }

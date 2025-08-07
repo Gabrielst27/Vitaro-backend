@@ -1,5 +1,5 @@
 export class Entity<Props = any> {
-  private _id?: string;
+  protected _id?: string;
   private _props: Required<Props>;
 
   constructor(props: Required<Props>, id?: string) {

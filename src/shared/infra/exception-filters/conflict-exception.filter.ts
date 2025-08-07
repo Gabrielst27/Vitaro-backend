@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { ConflictError } from '../erros/conflict.error';
+import { ConflictError } from '../../application/errors/conflict.error';
 
 @Catch(ConflictError)
 export class ConflictExceptionFilter implements ExceptionFilter {

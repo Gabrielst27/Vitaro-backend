@@ -16,12 +16,12 @@ export namespace EditUserUseCase {
 
   export class UseCase implements IUsecase<Input, Output> {
     constructor(private userRepository: IUserRepository.Repository) {}
-    async execute(input: Input, userId?: string): Promise<UserOutput> {
-      if (!userId) {
+    async execute(input: Input, token?: string): Promise<UserOutput> {
+      if (!token) {
         throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
       }
       const { name, age, height, weight } = input;
-      const entity = await this.userRepository.findById(userId);
+      const entity = await this.userRepository.findByToken(token);
       const props: UserProps = {
         ...entity.toJSON(),
         name: name ?? entity.name,

@@ -1,8 +1,8 @@
 import { ApplicationError } from './application.error';
 
-export class ForbiddenError extends ApplicationError {
+export class ConflictError extends ApplicationError {
   constructor(message: string) {
     super(message);
-    this.name = 'ForbiddenError';
+    this.name = 'ConflictError';
   }
 }
