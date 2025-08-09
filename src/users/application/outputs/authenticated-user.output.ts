@@ -12,16 +12,20 @@ export type AuthenticatedUserOutput = {
   role: ERole;
   createdAt?: Date;
   updatedAt?: Date;
-  disabledAt?: Date;
+  disabledAt?: Date | null;
   token: string;
 };
 
 export class AuthenticatedUserOutputMapper {
-  static toOutput(entity: UserEntity, token: string): AuthenticatedUserOutput {
-    return {
-      id: entity.id,
-      ...entity.props,
-      token,
-    };
+  static toOutput(
+    entity: UserEntity,
+    token: string,
+    id?: string,
+  ): AuthenticatedUserOutput {
+    if (id) {
+      entity.updateId(id);
+    }
+    const entityJson = entity.toJSON();
+    return { ...entityJson, token };
   }
 }

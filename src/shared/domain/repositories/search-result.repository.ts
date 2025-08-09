@@ -1,5 +1,4 @@
 import { Entity } from '../entities/entity';
-import { Query } from './search-params.repository';
 
 export type SearchResultProps<E extends Entity> = {
   items: E[];
@@ -8,39 +7,24 @@ export type SearchResultProps<E extends Entity> = {
   perPage: number;
   sort?: string | null;
   sortDir?: string | null;
-  queries?: Query[];
-  dateField?: string | null;
-  status?: string | null;
-  from?: Date | null;
-  to?: Date | null;
 };
 
 export class SearchResult<E extends Entity> {
-  private readonly _items: E[];
-  private readonly _total: number;
-  private readonly _currentPage: number;
-  private readonly _perPage: number;
-  private readonly _lastPage: number;
-  private readonly _sort?: string | null;
-  private readonly _sortDir?: string | null;
-  private readonly _queries?: Query[];
-  private readonly _dateField?: string | null;
-  private readonly _status?: string | null;
-  private readonly _from?: Date | null;
-  private readonly _to?: Date | null;
+  readonly items: E[];
+  readonly total: number;
+  readonly currentPage: number;
+  readonly perPage: number;
+  readonly lastPage: number;
+  readonly sort?: string | null;
+  readonly sortDir?: string | null;
 
   constructor(props: SearchResultProps<E>) {
-    this._items = props.items;
-    this._total = props.total;
-    this._currentPage = props.currentPage;
-    this._perPage = props.perPage;
-    this._lastPage = Math.floor(this._total / this._perPage);
-    this._sort = props.sort ?? null;
-    this._sortDir = props.sortDir ?? null;
-    this._queries = props.queries ?? [];
-    this._dateField = props.dateField ?? null;
-    this._status = props.status ?? null;
-    this._from = props.from ?? null;
-    this._to = props.to ?? null;
+    this.items = props.items;
+    this.total = props.total;
+    this.currentPage = props.currentPage;
+    this.perPage = props.perPage;
+    this.lastPage = Math.floor(this.total / this.perPage);
+    this.sort = props.sort ?? null;
+    this.sortDir = props.sortDir ?? null;
   }
 }

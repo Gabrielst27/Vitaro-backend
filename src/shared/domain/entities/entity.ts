@@ -1,23 +1,24 @@
-import { v4 } from 'uuid';
-
 export class Entity<Props = any> {
-  private readonly _id: string;
-  private _props: Props;
+  private _props: Required<Props>;
 
-  constructor(props: Props, id?: string) {
+  constructor(props: Required<Props>) {
     this._props = props;
-    this._id = id ?? v4();
   }
 
-  get id(): string {
-    return this._id;
-  }
-
-  get props(): Props {
+  get props(): Required<Props> {
     return this._props;
   }
 
-  protected updateProps(props: Props) {
-    if (props !== this._props) this._props = props;
+  protected updateProps(props: Props): void {
+    this._props = {
+      ...this._props,
+      ...props,
+    };
+  }
+
+  toJSON(): Required<{ id: string } & Props> {
+    return {
+      ...this._props,
+    } as Required<{ id: string } & Props>;
   }
 }

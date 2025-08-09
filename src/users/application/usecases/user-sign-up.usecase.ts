@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
 import { IUserRepository } from '../../domain/repositories/user-repository.interface';
 import { IAuthService } from '../../../auth/application/auth.service.interface';
@@ -8,6 +7,9 @@ import {
   AuthenticatedUserOutput,
   AuthenticatedUserOutputMapper,
 } from '../outputs/authenticated-user.output';
+import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 
 export namespace UserSignUpUsecase {
   export type Input = {
@@ -27,18 +29,17 @@ export namespace UserSignUpUsecase {
     async execute(input: Input): Promise<AuthenticatedUserOutput> {
       const { name, email, password } = input;
       if (!name || !email || !password) {
-        throw new BadRequestException('Input not provided');
+        throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
-      await this.userRepository.emailExists(email);
       const entity = new UserEntity({
         name,
         email,
-        password,
         isActive: false,
         role: ERole.COMMON,
       });
-      const authUser = await this.authService.createUser(entity);
-      delete entity.props.password;
+      const authUser = await this.authService.createUser(entity, password);
+      await this.userRepository.setToken(authUser.token);
+      entity.updateId(authUser.id);
       entity.props.isActive = true;
       await this.userRepository.insert(entity);
       return AuthenticatedUserOutputMapper.toOutput(entity, authUser.token);

@@ -1,18 +1,24 @@
 import {
+  ArrayMinSize,
   IsArray,
   IsEnum,
   IsNotEmpty,
   IsString,
+  IsUUID,
   Length,
   ValidateNested,
 } from 'class-validator';
-import { CreateWorkoutUseCase } from '../../application/usecases/create-workout.usecase';
-import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { Type } from 'class-transformer';
 import { CreateExerciseDto } from './create-exercise.dto';
+import { CreateWorkoutUseCase } from '../../application/usecases/create-workout.usecase';
 
 export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
+  @IsUUID()
+  @IsNotEmpty()
+  authorId: string;
+
   @IsString()
   @Length(4, 32)
   @IsNotEmpty()
@@ -27,6 +33,7 @@ export class CreateWorkoutDto implements CreateWorkoutUseCase.Input {
   sport: EWorkoutSports;
 
   @IsArray()
+  @ArrayMinSize(0)
   @ValidateNested()
   @Type(() => CreateExerciseDto)
   exercises: CreateExerciseDto[];

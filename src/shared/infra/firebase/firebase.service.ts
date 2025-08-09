@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { EnvConfigService } from '../../env-config/env-config.service';
+import { EnvConfigService } from '../env-config/env-config.service';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {

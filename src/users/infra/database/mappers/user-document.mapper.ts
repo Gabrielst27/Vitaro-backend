@@ -3,6 +3,7 @@ import { ERole } from '../../../../shared/domain/enums/role.enum';
 import { UserEntity } from '../../../domain/entities/user-entity';
 
 export type UserDocument = {
+  id: string;
   name: string;
   email: string;
   age: number;
@@ -10,39 +11,34 @@ export type UserDocument = {
   weight: number;
   isActive: boolean;
   role: ERole;
-  createdAt?: Date;
-  updatedAt?: Date;
-  disabledAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  disabledAt?: Date | null;
 };
 
 export class UserDocumentMapper {
   static toDocument(entity: UserEntity): UserDocument {
-    const document = {
-      ...entity.props,
-      age: entity.props.age ?? 0,
-      height: entity.props.height ?? 0,
-      weight: entity.props.weight ?? 0,
-    };
-    delete document.password;
-    return document;
+    return entity.toJSON();
   }
 
   static toEntity(props: UserDocument, id: string): UserEntity {
-    const createdAt: Date | undefined = UserDocumentMapper.convertDate(
-      props.createdAt,
-    );
-    const updatedAt: Date | undefined = UserDocumentMapper.convertDate(
-      props.updatedAt,
-    );
+    const createdAt: Date =
+      UserDocumentMapper.convertDate(props.createdAt) || new Date();
+    const updatedAt: Date =
+      UserDocumentMapper.convertDate(props.updatedAt) || new Date();
     const disabledAt: Date | undefined = UserDocumentMapper.convertDate(
       props.disabledAt,
     );
     const height: number = Number(props.height);
     const weight: number = Number(props.height);
-    return new UserEntity(
-      { ...props, createdAt, updatedAt, disabledAt, height, weight },
-      id,
-    );
+    return new UserEntity({
+      ...props,
+      createdAt,
+      updatedAt,
+      disabledAt,
+      height,
+      weight,
+    });
   }
 
   private static convertDate(value: any): Date | undefined {

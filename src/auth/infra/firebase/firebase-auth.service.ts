@@ -5,30 +5,29 @@ import {
   AuthenticatedUserOutputMapper,
 } from '../../../users/application/outputs/authenticated-user.output';
 import { UserEntity } from '../../../users/domain/entities/user-entity';
-import axios, { AxiosResponse } from 'axios';
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { UserIdentity } from '../../application/outputs/user-identity.output';
-import { GoogleApiIdentityDto } from './dtos/google-api-identity.dto';
-import { IEnvConfigService } from '../../../shared/infra/env-config/env-config.service.interface';
+import { UnauthorizedException } from '@nestjs/common';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
 
 export class FirebaseAuthService implements IAuthService {
-  constructor(private envConfigService: IEnvConfigService) {}
-
-  async createUser(user: UserEntity): Promise<AuthenticatedUserOutput> {
+  async createUser(
+    user: UserEntity,
+    password: string,
+  ): Promise<AuthenticatedUserOutput> {
     try {
       const authUser = await getAuth().createUser({
-        uid: user.id,
-        email: user.props.email,
-        password: user.props.password,
-        displayName: user.props.name,
+        email: user.email,
+        password: password,
+        displayName: user.name,
       });
       if (!authUser) {
         throw new Error('Firebase signUp failed');
       }
-      const customToken = await getAuth().createCustomToken(user.id);
+      const customToken = await getAuth().createCustomToken(authUser.uid);
       const userOutput = AuthenticatedUserOutputMapper.toOutput(
         user,
         customToken,
+        authUser.uid,
       );
       return userOutput;
     } catch {
@@ -36,29 +35,31 @@ export class FirebaseAuthService implements IAuthService {
     }
   }
 
-  async signInFirebase(email: string, password: string): Promise<UserIdentity> {
+  signInWithEmail(
+    email: any,
+    password: any,
+  ): Promise<{ id: string; token: string }> {
+    throw new UnauthorizedError(ErrorCodes.FORBIDDEN);
+  }
+
+  async signInWithToken(token: string): Promise<{ id: string; token: string }> {
+    const auth = getAuth();
     try {
-      const response = await axios.post(
-        `${this.envConfigService.getGoogleApiIdentityToolkit()}/accounts:signInWithPassword?email=${email}&password=${password}&key=${this.envConfigService.getFirebaseApiKey()}`,
-        {},
-        { timeout: 16000 },
-      );
-      if (response.status >= 400) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-      const userResponse: GoogleApiIdentityDto = response.data;
-      if (!userResponse.registered) {
-        throw new ForbiddenException('User is not registered');
-      }
+      const decodedToken = await this.verifyToken(token);
       return {
-        uid: userResponse.localId,
-        token: userResponse.idToken,
+        id: decodedToken.user_id,
+        token: decodedToken,
       };
     } catch (error) {
       if (error.response.status >= 400 && error.response.status <= 500) {
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException(ErrorCodes.INVALID_CREDENTIALS);
       }
       throw new Error('ERR-0001');
     }
+  }
+
+  async verifyToken(token: string): Promise<any> {
+    const decodedToken = await getAuth().verifyIdToken(token);
+    return decodedToken;
   }
 }

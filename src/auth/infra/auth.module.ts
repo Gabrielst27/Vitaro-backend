@@ -1,20 +1,24 @@
 import { Module } from '@nestjs/common';
-import { FirebaseAuthService } from './firebase/firebase-auth.service';
 import { EnvConfigModule } from '../../shared/infra/env-config/env-config.module';
-import { IEnvConfigService } from '../../shared/infra/env-config/env-config.service.interface';
-import { EnvConfigService } from '../../shared/infra/env-config/env-config.service';
+import { AuthGuard } from './auth.guard';
+import { AUTH_SERVICE } from '../application/auth.service.interface';
+import { SupabaseAuthService } from './supabase/supabase-auth.service';
+import { SupabaseModule } from '../../shared/infra/supabase/supabase.module';
+import { SupabaseService } from '../../shared/infra/supabase/supabase.service';
+import { FirebaseModule } from '../../shared/infra/firebase/firebase.module';
 
 @Module({
-  imports: [EnvConfigModule.forRoot()],
+  imports: [EnvConfigModule, SupabaseModule, FirebaseModule],
   providers: [
     {
-      provide: FirebaseAuthService,
-      useFactory: (envConfigService: IEnvConfigService) => {
-        return new FirebaseAuthService(envConfigService);
+      provide: AUTH_SERVICE,
+      useFactory: (service: SupabaseService) => {
+        return new SupabaseAuthService(service);
       },
-      inject: [EnvConfigService],
+      inject: [SupabaseService],
     },
+    AuthGuard,
   ],
-  exports: [FirebaseAuthService],
+  exports: [AUTH_SERVICE],
 })
 export class AuthModule {}

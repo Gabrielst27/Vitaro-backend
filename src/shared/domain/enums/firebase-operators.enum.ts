@@ -1,4 +1,4 @@
-export enum EFirebaseOperators {
+export enum EOperators {
   EQUALS = '==',
   DIFF = '!=',
   LESSER = '<',

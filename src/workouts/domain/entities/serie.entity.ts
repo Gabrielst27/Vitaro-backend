@@ -1,52 +1,62 @@
+import { v4 } from 'uuid';
+import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 import { SerieValidatorFactory } from '../validators/serie.validator';
 
 export type SerieProps = {
+  id?: string;
   position: number;
-  weight: number;
   reps: number;
   restInSeconds?: number;
-  technique?: string;
-  accessory?: string;
+  weight?: number | null;
+  techniqueId?: string | null;
+  accessory?: string | null;
 };
 
-export class SerieEntity {
-  private _position: number;
-  private _weight: number;
-  private _reps: number;
-  private _restInSeconds: number;
-  private _technique: string;
-  private _accessory: string;
-
-  constructor(props: SerieProps, id?: string) {
+export class SerieEntity extends Entity<SerieProps> {
+  constructor(props: SerieProps) {
     SerieEntity.validate(props);
-    this._restInSeconds = props.restInSeconds || 90;
-    this._technique = props.technique ?? '';
-    this._accessory = props.accessory ?? '';
+    const id = props.id ?? v4();
+    const restInSeconds = props.restInSeconds || 90;
+    const weight = props.weight ?? null;
+    const technique = props.techniqueId ?? null;
+    const accessory = props.accessory ?? null;
+    super({
+      ...props,
+      id,
+      restInSeconds,
+      weight,
+      techniqueId: technique,
+      accessory,
+    });
+  }
+
+  get id(): string {
+    return this.props.id;
   }
 
   get position(): number {
-    return this._position;
+    return this.props.position;
   }
 
-  get weight(): number {
-    return this._weight;
+  get weight(): number | null {
+    return this.props.weight;
   }
 
   get reps(): number {
-    return this._reps;
+    return this.props.reps;
   }
 
-  get restInSeconds(): number | undefined {
-    return this._restInSeconds;
+  get restInSeconds(): number {
+    return this.props.restInSeconds;
   }
 
-  get technique(): string | undefined {
-    return this._technique;
+  get technique(): string | null {
+    return this.props.techniqueId;
   }
 
-  get accessory(): string | undefined {
-    return this._accessory;
+  get accessory(): string | null {
+    return this.props.accessory;
   }
 
   static validate(props: SerieProps) {
@@ -55,5 +65,10 @@ export class SerieEntity {
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
     }
+  }
+
+  updateProps(props: SerieProps): void {
+    SerieEntity.validate(props);
+    super.updateProps(props);
   }
 }

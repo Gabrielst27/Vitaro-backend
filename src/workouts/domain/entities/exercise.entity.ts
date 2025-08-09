@@ -1,47 +1,34 @@
+import { v4 } from 'uuid';
 import { Entity } from '../../../shared/domain/entities/entity';
 import { EntityValidationError } from '../../../shared/domain/errors/validation.error';
 import { ExerciseValidatorFactory } from '../validators/exercise.validator';
 import { SerieEntity, SerieProps } from './serie.entity';
 
 export type ExerciseProps = {
+  id?: string;
   refId: string;
-  name: string;
   series: SerieProps[];
 };
 
 export class ExerciseEntity extends Entity<ExerciseProps> {
-  private _refId: string;
-  private _name: string;
-  private _series: SerieEntity[];
-
-  constructor(props: ExerciseProps, id?: string) {
+  private _series: SerieEntity[] = [];
+  constructor(props: ExerciseProps) {
     ExerciseEntity.validate(props);
-    super(props, id);
-    const series = ExerciseEntity.initializeSeries(props.series);
-    this._series = series;
+    const id = props.id ?? v4();
+    super({ ...props, id });
+    this.initializeSeries(props.series);
+  }
+
+  public get id(): string {
+    return this.props.id;
   }
 
   public get refId(): string {
-    return this._refId;
-  }
-
-  public get name(): string {
-    return this._name;
+    return this.props.refId;
   }
 
   public get series(): SerieEntity[] {
     return this._series;
-  }
-
-  static initializeSeries(series: SerieProps[]): SerieEntity[] {
-    if (series.length < 1) {
-      return [];
-    }
-    const entities: SerieEntity[] = [];
-    for (const serie of series) {
-      entities.push(new SerieEntity(serie));
-    }
-    return entities;
   }
 
   static validate(props: ExerciseProps) {
@@ -49,6 +36,43 @@ export class ExerciseEntity extends Entity<ExerciseProps> {
     const isValid = validator.validate(props);
     if (!isValid) {
       throw new EntityValidationError(validator.errors);
+    }
+  }
+
+  addSerie(serie: SerieProps) {
+    const newSerie: SerieEntity = new SerieEntity(serie);
+    this._series.push(newSerie);
+    this.updateSeries();
+  }
+
+  removeSerie(position: number) {
+    const newSeries: SerieEntity[] = this._series.filter(
+      (item) => item.position !== position,
+    );
+    this._series = newSeries;
+    this.updateSeries();
+  }
+
+  updateProps(props: ExerciseProps) {
+    ExerciseEntity.validate(props);
+    super.updateProps(props);
+  }
+
+  updateSeries() {
+    const newPropsSeries: SerieProps[] = [];
+    for (const entity of this._series) {
+      newPropsSeries.push(entity.toJSON());
+    }
+    this.props.series = newPropsSeries;
+  }
+
+  private initializeSeries(series: SerieProps[]) {
+    if (series.length < 1) {
+      return;
+    }
+    for (const serie of series) {
+      const entity = new SerieEntity(serie);
+      this._series.push(entity);
     }
   }
 }

@@ -1,27 +1,29 @@
-import { BadRequestException } from '@nestjs/common';
 import { IUsecase } from '../../../shared/application/usecases/usecase.interface';
-import { EWorkoutGoals } from '../../domain/enums/workout-categories.enum';
+import { EWorkoutGoals } from '../../domain/enums/workout-goals.enum';
 import { EWorkoutSports } from '../../domain/enums/workout-sports.enum';
 import { IWorkoutRepository } from '../../domain/repositories/workout.repository.interface';
 import { WorkoutOutput, WorkoutOutputMapper } from '../outputs/workout.output';
 import { WorkoutEntity } from '../../domain/entities/workout.entity';
 import { SerieProps } from '../../domain/entities/serie.entity';
 import { ExerciseProps } from '../../domain/entities/exercise.entity';
+import { BadRequestError } from '../../../shared/application/errors/bad-request.error';
+import { UnauthorizedError } from '../../../shared/application/errors/unauthorized.error';
+import { ErrorCodes } from '../../../shared/domain/enums/error-codes.enum';
 
 export namespace CreateWorkoutUseCase {
   export type Input = {
+    authorId: string;
     title: string;
     goal: EWorkoutGoals;
     sport: EWorkoutSports;
     exercises: {
       refId: string;
-      name: string;
       series: {
         position: number;
-        weight: number;
+        weight?: number;
         reps: number;
         restInSeconds?: number;
-        technique?: string;
+        techniqueId?: string;
         accessory?: string;
       }[];
     }[];
@@ -30,22 +32,15 @@ export namespace CreateWorkoutUseCase {
   export class UseCase implements IUsecase<Input, Output> {
     constructor(private workoutRepository: IWorkoutRepository.Repository) {}
 
-    async execute(input: Input): Promise<WorkoutOutput> {
-      const { title, goal, sport, exercises } = input;
-      if (!title || !goal || !sport || !exercises) {
-        throw new BadRequestException('Workout input not provided');
+    async execute(input: Input, token?: string): Promise<WorkoutOutput> {
+      if (!token) {
+        throw new UnauthorizedError(ErrorCodes.USER_NOT_AUTHENTICATED);
       }
-      if (exercises.length < 1) {
-        throw new BadRequestException('Workout must have at least 1 exercise');
+      const { authorId, title, goal, sport, exercises } = input;
+      if (!authorId || !title || !goal || !sport || !exercises) {
+        throw new BadRequestError(ErrorCodes.INPUT_NOT_PROVIDED);
       }
-      for (let exercise of exercises) {
-        if (exercise.series.length < 1) {
-          throw new BadRequestException(
-            exercise.name,
-            ' must have at least 1 serie',
-          );
-        }
-      }
+      this.workoutRepository.setToken(token);
       await this.workoutRepository.titleExists(title);
       const exercisesProps: ExerciseProps[] = [];
       for (const exercise of exercises) {
@@ -61,7 +56,10 @@ export namespace CreateWorkoutUseCase {
         }
         exercisesProps.push(exerciseProps);
       }
-      const entity = new WorkoutEntity({ ...input, exercises: exercisesProps });
+      const entity = new WorkoutEntity({
+        ...input,
+        exercises: exercisesProps,
+      });
       await this.workoutRepository.insert(entity);
       return WorkoutOutputMapper.toOutput(entity);
     }

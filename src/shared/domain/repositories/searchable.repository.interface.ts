@@ -10,7 +10,7 @@ export interface ISearchableRepository<
 > extends IRepository<E> {
   sortableFields: string[];
   searchableFields: string[];
-  dateFields: string[];
+  insensitiveFields: string[];
 
-  search(params: SearchInput): SearchOutput;
+  search(params: SearchInput): Promise<SearchOutput>;
 }

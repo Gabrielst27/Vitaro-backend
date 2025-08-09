@@ -4,11 +4,9 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumberString,
-  IsString,
   Length,
   ValidateNested,
 } from 'class-validator';
-import { SerieRules } from '../../domain/validators/serie.rules';
 import { CreateSerieDto } from './create-serie.dto';
 
 export class CreateExerciseDto {
@@ -17,12 +15,8 @@ export class CreateExerciseDto {
   @IsNotEmpty()
   refId: string;
 
-  @IsString()
-  @Length(2, 64)
-  @IsNotEmpty()
-  name: string;
-
   @IsArray()
+  @ArrayMinSize(0)
   @ValidateNested()
   @Type(() => CreateSerieDto)
   series: CreateSerieDto[];

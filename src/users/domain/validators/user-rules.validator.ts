@@ -2,15 +2,16 @@ import {
   IsBoolean,
   IsDate,
   IsEmail,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
   Length,
   Matches,
 } from 'class-validator';
 import { UserProps } from '../entities/user-entity';
+import { ERole } from '../../../shared/domain/enums/role.enum';
 
 export class UserRules {
   @Matches(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, {
@@ -25,11 +26,6 @@ export class UserRules {
   @IsNotEmpty()
   @Length(12, 64)
   email: string;
-
-  @IsString()
-  @IsOptional()
-  @Length(6, 64)
-  password?: string;
 
   @IsInt()
   @IsOptional()
@@ -47,6 +43,10 @@ export class UserRules {
   @IsNotEmpty()
   isActive: boolean;
 
+  @IsEnum(ERole)
+  @IsNotEmpty()
+  role: ERole;
+
   @IsDate()
   @IsOptional()
   createdAt?: Date;
@@ -62,10 +62,10 @@ export class UserRules {
   constructor({
     name,
     email,
-    password,
     age,
     height,
     weight,
+    role,
     isActive,
     createdAt,
     updatedAt,
@@ -74,10 +74,10 @@ export class UserRules {
     Object.assign(this, {
       name,
       email,
-      password,
       age,
       height,
       weight,
+      role,
       isActive,
       createdAt,
       updatedAt,
